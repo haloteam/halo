@@ -90,7 +90,7 @@ def loop():
             count = 0
 
         # raining
-        rainVal = ADC0832.getResult(0)
+        rainVal = ADC.read(2)
         print "rainVal : " + rainVal
         print "GPIO : " + GPIO.input(RAIN)
         if GPIO.input(RAIN) == 0:
