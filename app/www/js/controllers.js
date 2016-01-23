@@ -1,5 +1,6 @@
 angular.module('halo.controllers', [])
 
+<<<<<<< HEAD
 .controller('DashCtrl', function($scope, Dash) {
 
     $scope.total = 100;
@@ -12,6 +13,20 @@ angular.module('halo.controllers', [])
             $scope.rain = data.Item.currentRain;
             $scope.progress = Math.round(data.Item.currentTemp);
         });
+=======
+.controller('DashCtrl', function($scope) {
+
+  //$scope.sensors = Dash.fetchSensorInfo();
+
+  var hms = '00:04:33';   // your input string
+  var a = hms.split(':'); // split it at the colons
+
+  // minutes are worth 60 seconds. Hours are worth 60 minutes.
+  $scope.total = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
+    $scope.progress=5;
+    $scope.add=function(){
+      $scope.progress+=50;
+>>>>>>> 24ad159f37ee6d3f2d0f1aec5ffb618c53b89dca
     }
 
     parseSensorData();
@@ -47,4 +62,8 @@ angular.module('halo.controllers', [])
     console.log(angle(loc.x,loc.y));
     console.log(2*Math.PI*96)*(angle(loc.x,loc.y)/360);
   },false);
+<<<<<<< HEAD
 });
+=======
+})
+>>>>>>> 24ad159f37ee6d3f2d0f1aec5ffb618c53b89dca
