@@ -96,51 +96,51 @@ def setup():
 def update_LCD(temp, gas, h2o):
     if not IS_TALKING:
         if gas >= 150:
-		if not ALARM:
-			ALARM = True
-            LCD.clear()
-            LCD.write(0,0,"ALERT!")
-            LCD.write(0,1,"Gas detected!")
-            print ''
-            print '   ***************'
-            print '   * Danger Gas! *'
-            print '   ***************'
-            print ''
+    		if not ALARM:
+    			ALARM = True
+                LCD.clear()
+                LCD.write(0,0,"ALERT!")
+                LCD.write(0,1,"Gas detected!")
+                print ''
+                print '   ***************'
+                print '   * Danger Gas! *'
+                print '   ***************'
+                print ''
 
         elif temp <= 45:
-		if not ALARM:
-			ALARM = True
-            status = 0
-            LCD.clear()
-            LCD.write(0,0,"ALERT!")
-            LCD.write(0,1,"Low temperature!")
-            print ''
-            print '   ********************'
-            print '   * Danger Low Temp! *'
-            print '   ********************'
-            print ''
+    		if not ALARM:
+    			ALARM = True
+                status = 0
+                LCD.clear()
+                LCD.write(0,0,"ALERT!")
+                LCD.write(0,1,"Low temperature!")
+                print ''
+                print '   ********************'
+                print '   * Danger Low Temp! *'
+                print '   ********************'
+                print ''
 
         elif h2o <= 200:
-		if not ALARM:
-			ALARM = True
-            LCD.clear()
-            LCD.write(0,0,"ALERT!")
-            LCD.write(0,1,"Water detected!")
-            print ''
-            print '   **************************'
-            print '   * Danger Water Detected! *'
-            print '   **************************'
-            print ''
+    		if not ALARM:
+    			ALARM = True
+                LCD.clear()
+                LCD.write(0,0,"ALERT!")
+                LCD.write(0,1,"Water detected!")
+                print ''
+                print '   **************************'
+                print '   * Danger Water Detected! *'
+                print '   **************************'
+                print ''
         else:
-		if ALARM:
-			ALARM = False
-            LCD.clear()
-            LCD.write(0,0, "System Normal")
-            print ''
-            print '   --------------------------'
-            print '   *  System Status Normal  *'
-            print '   --------------------------'
-            print ''
+    		if ALARM:
+    			ALARM = False
+                LCD.clear()
+                LCD.write(0,0, "System Normal")
+                print ''
+                print '   --------------------------'
+                print '   *  System Status Normal  *'
+                print '   --------------------------'
+                print ''
     else:
         pass
 
