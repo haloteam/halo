@@ -1,0 +1,13 @@
+import httplib, urllib
+
+params = urllib.urlencode({"deviceId": 1})
+headers = {"Content-type": "application/x-www-form-urlencoded",
+           "Accept": "text/plain"}
+conn = httplib.HTTPConnection("a9a0t0l599.execute-api.us-east-1.amazonaws.com")
+conn.request("GET", "/prod/Halo", params, headers)
+
+response = conn.getresponse()
+
+print response.status, response.reason
+data = response.read()
+conn.close()
