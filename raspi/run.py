@@ -1,6 +1,7 @@
-#!/usr/bin/env python
+1;95;0c#!/usr/bin/env python
 import httplib, urllib
 import PCF8591 as ADC
+import LCD1602 as LCD
 import RPi.GPIO as GPIO
 import time
 import math
@@ -9,6 +10,7 @@ from threading import Thread
 import subprocess
 import json
 from datetime import datetime
+
 THERMISTOR = 17
 GAS_SENSOR = 18
 BUZZ = 6
@@ -36,6 +38,10 @@ def queue_task(q):
 
 def setup():
     ADC.setup(0x48)
+    LCD.init(0x27, 1)
+    LCD.write(0,0,'System startup...')
+    time.sleep(1)
+    LCD.clear()
     GPIO.setup(THERMISTOR, GPIO.IN)
     GPIO.setup(GAS_SENSOR, GPIO.IN)
     GPIO.setup(BUZZ, GPIO.OUT)
@@ -66,6 +72,7 @@ def loop():
     count = 0
     q_count = 0
     now = datetime.now()
+    LCD.write(0,0,'System status: OK')
     while True:
         # get and convert temperature
         analogTemp = ADC.read(0)
@@ -90,15 +97,12 @@ def loop():
             GPIO.output(BUZZ, 1)
             count = 0
 
-        # raining
-        rainVal = ADC.read(2)
-        print "rainVal : " + str(rainVal)
-        print "GPIO : " + str(GPIO.input(RAIN))
-        if GPIO.input(RAIN) == 0:
-			print '***************'
-			print '* !!RAINING!! *'
-			print '***************'
-			print ''
+        # get water data
+        h2oVal = ADC.read(2)
+        print "h2oVal : " + str(h2oVal)
+        if h2oVal < 100:
+            print "water detected!"
+            LCD.clear()
 
         if q_count > 3.5:
             updates = []
