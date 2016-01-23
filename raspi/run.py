@@ -37,6 +37,7 @@ def setup():
     GPIO.setup(THERMISTOR, GPIO.IN)
     GPIO.setup(GAS_SENSOR, GPIO.IN)
     GPIO.setup(BUZZ, GPIO.OUT)
+    GPIO.setup(RAIN, GPIO.OUT)
     GPIO.output(BUZZ, 1)
 
 def print_gas(x):
@@ -90,7 +91,7 @@ def loop():
         # raining
         rainVal = ADC.read(2)
         print "rainVal : " + str(rainVal)
-        print "GPIO : " + str(GPIO.input(RAIN))
+        #print "GPIO : " + str(GPIO.input(RAIN))
         if GPIO.input(RAIN) == 0:
 			print '***************'
 			print '* !!RAINING!! *'
