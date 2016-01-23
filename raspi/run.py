@@ -50,6 +50,15 @@ def queue_task(q):
 
         q.task_done()
 
+def alarm_task():
+	while True:
+		if ALARM:
+			GPIO.output(0)
+			time.sleep(2)
+			GPIO.output(1)
+		else:
+			pass
+			
 
 def speech_to_text():
 
@@ -85,8 +94,10 @@ def setup():
     GPIO.output(BUZZ, 1)
 
 def update_LCD(temp, gas, h2o):
-    if !IS_TALKING:
-        if gas >= 180:
+    if not IS_TALKING:
+        if gas >= 150:
+		if not ALARM:
+			ALARM = True
             LCD.clear()
             LCD.write(0,0,"ALERT!")
             LCD.write(0,1,"Gas detected!")
@@ -97,6 +108,8 @@ def update_LCD(temp, gas, h2o):
             print ''
 
         elif temp <= 45:
+		if not ALARM:
+			ALARM = True
             status = 0
             LCD.clear()
             LCD.write(0,0,"ALERT!")
@@ -106,7 +119,10 @@ def update_LCD(temp, gas, h2o):
             print '   * Danger Low Temp! *'
             print '   ********************'
             print ''
-        elif h2o <= 100:
+
+        elif h2o <= 200:
+		if not ALARM:
+			ALARM = True
             LCD.clear()
             LCD.write(0,0,"ALERT!")
             LCD.write(0,1,"Water detected!")
@@ -116,6 +132,8 @@ def update_LCD(temp, gas, h2o):
             print '   **************************'
             print ''
         else:
+		if ALARM:
+			ALARM = False
             LCD.clear()
             LCD.write(0,0, "System Normal")
             print ''
@@ -130,7 +148,9 @@ def loop():
     worker = Thread(target=queue_task, args=(q,))
     worker.setDaemon(True)
     worker.start()
-    alarm = Thread(target=alarm_task)
+    alarm_thread = Thread(target=alarm_task)
+	alarm_thread.setDeamon(True)
+	alarm_thread.start()
     status = 1
     count = 0
     q_count = 0
@@ -178,8 +198,9 @@ def loop():
         time.sleep(2)
 
 def destroy():
-    GPIO.output(BUZZ, 1)
-    GPIO.cleanup()
+	LCD.clear()
+	GPIO.output(BUZZ, 1)
+	GPIO.cleanup()
 
 if __name__ == '__main__':
     try:
