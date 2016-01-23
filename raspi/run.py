@@ -2,6 +2,7 @@
 import httplib, urllib
 import PCF8591 as ADC
 import RPi.GPIO as GPIO
+import ADC0832
 import time
 import math
 from Queue import Queue
@@ -12,6 +13,7 @@ from datetime import datetime
 THERMISTOR = 17
 GAS_SENSOR = 18
 BUZZ = 6
+RAIN = 13
 
 GPIO.setmode(GPIO.BCM)
 
@@ -22,8 +24,10 @@ q = Queue(maxsize=0)
 
 def queue_task(q):
     while True:
-        data = q.get()
+        updates = q.get()
+        data = {}
         data['deviceId'] = 1;
+        data['updates'] = updates
         resp = subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), HALO_LAMBDA_URL])
         print resp
         q.task_done()
@@ -35,6 +39,7 @@ def setup():
     GPIO.setup(GAS_SENSOR, GPIO.IN)
     GPIO.setup(BUZZ, GPIO.OUT)
     GPIO.output(BUZZ, 1)
+    ADC0832.setup()
 
 def print_gas(x):
     if x == 1:
@@ -84,8 +89,22 @@ def loop():
             GPIO.output(BUZZ, 1)
             count = 0
 
+        # raining
+        rainVal = ADC0832.getResult(0)
+        print "rainVal : " + rainVal
+		print "GPIO : " + GPIO.input(RAIN)
+		if GPIO.input(RAIN) == 0:
+			print '***************'
+			print '* !!RAINING!! *'
+			print '***************'
+			print ''
+
         if q_count > 3.5:
-            q.put({'type' : 'temperature', 'value': str(temp), 'timestamp': str(datetime.now())})
+            updates = []
+            updates.append({'type' : 'temperature', 'value': str(temp), 'timestamp': str(datetime.now())})
+            updates.append({'type' : 'gas', 'value': str(ADC.read(1)), 'timestamp': str(datetime.now())})
+            updates.append({'type' : 'rain', 'value': str(rainVal), 'timestamp': str(datetime.now())})
+            q.put(updates)
             q_count = 0
         q_count = q_count + 1
         time.sleep(2)
