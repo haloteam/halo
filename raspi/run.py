@@ -52,7 +52,7 @@ def update_LCD(temp, gas, h2o):
     if gas >= 180:
         LCD.clear()
         LCD.write(0,0,"ALERT!")
-        LCD.write(1,0,"Gas detected!")
+        LCD.write(0,1,"Gas detected!")
         print ''
         print '   ***************'
         print '   * Danger Gas! *'
@@ -61,8 +61,8 @@ def update_LCD(temp, gas, h2o):
     elif temp <= 45:
         status = 0
         LCD.clear()
-        LCD.write(0,0,"ALERT!"
-        LCD.write(1,0,"Low temperature!")
+        LCD.write(0,0,"ALERT!")
+        LCD.write(0,1,"Low temperature!")
         print ''
         print '   ********************'
         print '   * Danger Low Temp! *'
@@ -70,8 +70,8 @@ def update_LCD(temp, gas, h2o):
         print ''
     elif h2o <= 100:
         LCD.clear()
-        LCD.write(0,0,"ALERT!"
-        LCD.write(1,0,"Water detected!")
+        LCD.write(0,0,"ALERT!")
+        LCD.write(0,1,"Water detected!")
         print ''
         print '   **************************'
         print '   * Danger Water Detected! *'
@@ -94,7 +94,7 @@ def loop():
     count = 0
     q_count = 0
     now = datetime.now()
-    LCD.write(0,0,'System status: OK')
+    LCD.write(0,0,'System Normal')
     while True:
         # get and convert temperature
         analogTemp = ADC.read(0)
