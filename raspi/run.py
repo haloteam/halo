@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import httplib, urllib
 import PCF8591 as ADC
+import LCD1602 as LCD
 import RPi.GPIO as GPIO
 import time
 import math
@@ -11,10 +12,11 @@ import json
 from datetime import datetime
 import wit
 
+# wit init
 wit_access_token = '5HO7GQT6GHYYBC4G2M5SPTCWXSNSEL4S'
 wit.init()
-
 IS_TALKING = False
+
 
 THERMISTOR = 17
 GAS_SENSOR = 18
@@ -46,29 +48,6 @@ def queue_task(q):
 
         q.task_done()
 
-
-def setup():
-    ADC.setup(0x48)
-    GPIO.setup(THERMISTOR, GPIO.IN)
-    GPIO.setup(GAS_SENSOR, GPIO.IN)
-    GPIO.setup(BUZZ, GPIO.OUT)
-    GPIO.setup(RAIN, GPIO.OUT)
-    GPIO.output(BUZZ, 1)
-
-def print_gas(x):
-    if x == 1:
-        print ''
-        print '   *********'
-        print '   * Safe~ *'
-        print '   *********'
-        print ''
-    if x == 0:
-        print ''
-        print '   ***************'
-        print '   * Danger Gas! *'
-        print '   ***************'
-        print ''
-
 def speech_to_text():
 
     # user is prompted to talk
@@ -87,6 +66,57 @@ def speech_to_text():
     IS_TALKING = False
 
 
+def setup():
+    ADC.setup(0x48)
+    LCD.init(0x27, 1)
+    LCD.write(0,0,'System startup...')
+    time.sleep(1)
+    LCD.clear()
+    GPIO.setup(THERMISTOR, GPIO.IN)
+    GPIO.setup(GAS_SENSOR, GPIO.IN)
+    GPIO.setup(BUZZ, GPIO.OUT)
+    GPIO.setup(RAIN, GPIO.OUT)
+    GPIO.output(BUZZ, 1)
+
+def update_LCD(temp, gas, h2o):
+    if gas >= 180:
+        LCD.clear()
+        LCD.write(0,0,"ALERT!")
+        LCD.write(0,1,"Gas detected!")
+        print ''
+        print '   ***************'
+        print '   * Danger Gas! *'
+        print '   ***************'
+        print ''
+
+    elif temp <= 45:
+        status = 0
+        LCD.clear()
+        LCD.write(0,0,"ALERT!")
+        LCD.write(0,1,"Low temperature!")
+        print ''
+        print '   ********************'
+        print '   * Danger Low Temp! *'
+        print '   ********************'
+        print ''
+    elif h2o <= 100:
+        LCD.clear()
+        LCD.write(0,0,"ALERT!")
+        LCD.write(0,1,"Water detected!")
+        print ''
+        print '   **************************'
+        print '   * Danger Water Detected! *'
+        print '   **************************'
+        print ''
+    else:
+        LCD.clear()
+        LCD.write(0,0, "System Normal")
+        print ''
+        print '   --------------------------'
+        print '   *  System Status Normal  *'
+        print '   --------------------------'
+        print ''
+
 
 def loop():
     worker = Thread(target=queue_task, args=(q,))
@@ -96,6 +126,7 @@ def loop():
     count = 0
     q_count = 0
     now = datetime.now()
+    LCD.write(0,0,'System Normal')
     while True:
         # get and convert temperature
         analogTemp = ADC.read(0)
@@ -105,30 +136,27 @@ def loop():
         temp = (temp - 273.15) * 9/5 + 32
         print 'temperature = ', temp, 'F'
         # get and convert gas sensor data
-        print 'gas sensor = ', ADC.read(1)
-        tmp = GPIO.input(GAS_SENSOR)
-        if tmp != status:
-            print_gas(tmp)
-            status = tmp
-        if status == 0:
-            count += 1
-            if count % 2 == 0:
-                GPIO.output(BUZZ, 1)
-            else:
-                GPIO.output(BUZZ, 0)
-        else:
-            GPIO.output(BUZZ, 1)
-            count = 0
+        gas = ADC.read(1)
+        print 'gas sensor = ', gas
 
-        # raining
-        rainVal = ADC.read(2)
-        print "rainVal : " + str(rainVal)
-        print "GPIO : " + str(GPIO.input(RAIN))
-        if GPIO.input(RAIN) == 0:
-			print '***************'
-			print '* !!RAINING!! *'
-			print '***************'
-			print ''
+        # tmp = GPIO.input(GAS_SENSOR)
+        # if tmp != status:
+        #     check_gas(tmp)
+        #     status = tmp
+        # if status == 0:
+        #     count += 1
+        #     if count % 2 == 0:
+        #         GPIO.output(BUZZ, 1)
+        #     else:
+        #         GPIO.output(BUZZ, 0)
+        # else:
+        #     GPIO.output(BUZZ, 1)
+        #     count = 0
+
+        # get water data
+        h2o = ADC.read(2)
+        print "h2o sensor = " + str(h2o)
+        update_LCD(temp, gas, h2o)
 
         if q_count > 3.5:
             updates = []
