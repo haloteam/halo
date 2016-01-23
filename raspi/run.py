@@ -37,6 +37,7 @@ def queue_task(q):
         data = {}
         data['deviceId'] = 1;
         data['updates'] = updates
+        data['action'] = "save"
         print data
         resp = subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), HALO_LAMBDA_URL])
 
