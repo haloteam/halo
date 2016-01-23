@@ -2,7 +2,6 @@
 import httplib, urllib
 import PCF8591 as ADC
 import RPi.GPIO as GPIO
-import ADC0832
 import time
 import math
 from Queue import Queue
