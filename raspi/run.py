@@ -89,8 +89,8 @@ def loop():
 
         # raining
         rainVal = ADC.read(2)
-        print "rainVal : " + rainVal
-        print "GPIO : " + GPIO.input(RAIN)
+        print "rainVal : " + str(rainVal)
+        print "GPIO : " + str(GPIO.input(RAIN))
         if GPIO.input(RAIN) == 0:
 			print '***************'
 			print '* !!RAINING!! *'
