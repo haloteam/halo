@@ -53,3 +53,17 @@ angular.module('halo', ['ionic', 'halo.controllers', 'halo.services', 'angular-s
   $urlRouterProvider.otherwise('/tab/dash');
 
 });
+
+angular.module('angular-svg-round-progress').config(['$provide', function($provide) {
+    $provide.decorator('roundProgressDirective', ['$delegate', function($delegate){
+        var directive = $delegate[0];
+
+        directive.compile = function(element){
+            element.find('path').eq(0).attr('marker-start', 'url(#circle)');
+            element.find('path').eq(0).attr('class','draggable')
+            return directive.link;
+        };
+
+        return $delegate;
+    }]);
+}]);

@@ -1,12 +1,30 @@
 <ion-view view-title="Dashboard">
-  <ion-content class="padding dashboard">
-    <div class="c100 p25">
-                    <span>25%</span>
-                    <div class="slice">
-                        <div class="bar"></div>
-                        <div class="fill"></div>
-                    </div>
-                </div>
+  <ion-content class="padding">
 
-  </ion-content>
+        <button ng-click='add()' class="button button-assertive">Add Progress</button>
+
+        <div class="progress-wrapper" style="
+    /* z-index: 5; */
+">
+            <div class="progress ng-binding" ng-style="getStyle()" style="top: 50%; bottom: auto; left: 50%; transform: translateY(-50%) translateX(-50%); font-size: 35.7143px;">
+              42°
+             </div>
+
+        <div style="text-align:center"
+    round-progress
+    max="total"
+    current="progress"
+    color="#FC8053"
+    bgcolor="#eaeaea"
+    radius="100"
+    stroke="8"
+    semi="false"
+    rounded="true"
+    clockwise="true"
+    responsive="false"
+    duration="800"
+    animation="easeInOutQuart"></div>
+        </div>
+
+      </ion-content>
 </ion-view>
