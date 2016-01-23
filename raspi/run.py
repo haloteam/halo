@@ -7,6 +7,7 @@ import math
 from Queue import Queue
 from threading import Thread
 import subprocess
+import json
 from datetime import datetime
 THERMISTOR = 17
 GAS_SENSOR = 18
@@ -52,11 +53,12 @@ def print_gas(x):
 #def
 
 def loop():
-    worker = Thread(target=do_stuff, args=(q,))
+    worker = Thread(target=queue_task, args=(q,))
     worker.setDaemon(True)
     worker.start()
     status = 1
     count = 0
+    q_count = 0
     now = datetime.now()
     while True:
         # get and convert temperature
@@ -66,8 +68,6 @@ def loop():
         temp = 1/(((math.log(Rt / 10000)) / 3950) + (1 / (273.15 + 25)))
         temp = (temp - 273.15) * 9/5 + 32
         print 'temperature = ', temp, 'F'
-
-        q.put({'type' : 'temperature', 'value': str(temp), 'timestamp': str(datetime.now())})
         # get and convert gas sensor data
         print 'gas sensor = ', ADC.read(1)
         tmp = GPIO.input(GAS_SENSOR)
@@ -84,6 +84,10 @@ def loop():
             GPIO.output(BUZZ, 1)
             count = 0
 
+        if q_count > 3.5:
+            q.put({'type' : 'temperature', 'value': str(temp), 'timestamp': str(datetime.now())})
+            q_count = 0
+        q_count = q_count + 1
         time.sleep(2)
 
 def destroy():
