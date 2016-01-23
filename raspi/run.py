@@ -24,9 +24,11 @@ q = Queue(maxsize=0)
 def queue_task(q):
     while True:
         updates = q.get()
+        print updates
         data = {}
         data['deviceId'] = 1;
         data['updates'] = updates
+        print data
         resp = subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), HALO_LAMBDA_URL])
         print resp
         q.task_done()
@@ -91,7 +93,7 @@ def loop():
         # raining
         rainVal = ADC.read(2)
         print "rainVal : " + str(rainVal)
-        #print "GPIO : " + str(GPIO.input(RAIN))
+        print "GPIO : " + str(GPIO.input(RAIN))
         if GPIO.input(RAIN) == 0:
 			print '***************'
 			print '* !!RAINING!! *'
