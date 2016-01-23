@@ -16,40 +16,55 @@ exports.handler = function(event, context) {
     console.log('Received event:', JSON.stringify(event, null, 2));
     //context.succeed("success : " + JSON.stringify(event));
     var tableName = "halo_devices";
-    var deviceId = event.deviceId;
-    for(var i = 0; i < event.updates.length; i++) {
-        var type = event.updates.type;
-        if(type === "temperature") {
-            var updateExpression = "set currentTemp = :attrValue";
-            var tempValue = event.updates.value;
+    if(event.action === "save") {
+        var deviceId = event.deviceId;
+        for(var i = 0; i < event.updates.length; i++) {
+            var type = event.updates[i].type;
+            if(type === "temperature") {
+                var updateExpression = "set currentTemp = :attrValue";
+                var tempValue = event.updates[i].value;
+            }
+            else if(type === "gas") {
+                var updateExpression = "set currentGas = :attrValue";
+                var gasValue = event.updates[i].value;
+            }
+            else if(type === "rain") {
+                var updateExpression = "set currentRain = :attrValue";
+                var rainValue = event.updates[i].value;
+            }
         }
-        else if(type === "gas") {
-            var updateExpression = "set currentGas = :attrValue";
-            var gasValue = event.updates.value;
-        }
-        else if(type === "rain") {
-            var updateExpression = "set currentRain = :attrValue";
-            var rainValue = event.updates.value;
-        }
+        console.log(tempValue, gasValue, rainValue, 'values');
+        docClient.update({
+            "TableName" : tableName,
+            "Key" : {
+                "DeviceId":String(deviceId)
+            },
+            "UpdateExpression" : "set currentTemp = :tempValue, currentGas = :gasValue, currentRain = :rainValue",
+
+            "ExpressionAttributeValues" : {
+                ":tempValue" : tempValue,
+                ":gasValue" : gasValue,
+                ":rainValue" : rainValue
+            }
+
+        }, function(error, data) {
+          context.done(error, data);
+        });
+
     }
-    docClient.update({
-        "TableName" : tableName,
-        "Key" : {
-            "DeviceId":String(deviceId)
-        },
-        "UpdateExpression" : "set currentTemp = :tempValue; set currentGas = :gasValue; set currentRain = :rainValue",
-
-        "ExpressionAttributeValues" : {
-            ":tempValue" : event.value,
-            ":gasValue" : event.value,
-            ":rainValue" : event.value
-        }
-
-    }, function(error, data) {
-      context.done(error, data);
-    });
+    else {
+        var params = {
+          TableName : tableName,
+          Key: {
+            DeviceId: "1"
+          }
+        };
+        docClient.get(params, function(error, data) {
+          context.done(error, data);
+        });
 
 
+    }
     // var tableName = "halo_devices";
     // var deviceId = event.deviceId;
     // var data_type = event.data_type;

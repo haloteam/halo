@@ -16,6 +16,7 @@ import wit
 wit_access_token = '5HO7GQT6GHYYBC4G2M5SPTCWXSNSEL4S'
 wit.init()
 IS_TALKING = False
+ALARM = False
 
 
 THERMISTOR = 17
@@ -37,6 +38,7 @@ def queue_task(q):
         data = {}
         data['deviceId'] = 1;
         data['updates'] = updates
+        data['action'] = "save"
         print data
         resp = subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), HALO_LAMBDA_URL])
 
@@ -47,6 +49,7 @@ def queue_task(q):
             worker.start()
 
         q.task_done()
+
 
 def speech_to_text():
 
@@ -65,6 +68,9 @@ def speech_to_text():
 
     IS_TALKING = False
 
+def mouth_open():
+    LCD.clear()
+    LCD.write(0,0,"")
 
 def setup():
     ADC.setup(0x48)
@@ -79,49 +85,52 @@ def setup():
     GPIO.output(BUZZ, 1)
 
 def update_LCD(temp, gas, h2o):
-    if gas >= 180:
-        LCD.clear()
-        LCD.write(0,0,"ALERT!")
-        LCD.write(0,1,"Gas detected!")
-        print ''
-        print '   ***************'
-        print '   * Danger Gas! *'
-        print '   ***************'
-        print ''
+    if !IS_TALKING:
+        if gas >= 180:
+            LCD.clear()
+            LCD.write(0,0,"ALERT!")
+            LCD.write(0,1,"Gas detected!")
+            print ''
+            print '   ***************'
+            print '   * Danger Gas! *'
+            print '   ***************'
+            print ''
 
-    elif temp <= 45:
-        status = 0
-        LCD.clear()
-        LCD.write(0,0,"ALERT!")
-        LCD.write(0,1,"Low temperature!")
-        print ''
-        print '   ********************'
-        print '   * Danger Low Temp! *'
-        print '   ********************'
-        print ''
-    elif h2o <= 100:
-        LCD.clear()
-        LCD.write(0,0,"ALERT!")
-        LCD.write(0,1,"Water detected!")
-        print ''
-        print '   **************************'
-        print '   * Danger Water Detected! *'
-        print '   **************************'
-        print ''
+        elif temp <= 45:
+            status = 0
+            LCD.clear()
+            LCD.write(0,0,"ALERT!")
+            LCD.write(0,1,"Low temperature!")
+            print ''
+            print '   ********************'
+            print '   * Danger Low Temp! *'
+            print '   ********************'
+            print ''
+        elif h2o <= 100:
+            LCD.clear()
+            LCD.write(0,0,"ALERT!")
+            LCD.write(0,1,"Water detected!")
+            print ''
+            print '   **************************'
+            print '   * Danger Water Detected! *'
+            print '   **************************'
+            print ''
+        else:
+            LCD.clear()
+            LCD.write(0,0, "System Normal")
+            print ''
+            print '   --------------------------'
+            print '   *  System Status Normal  *'
+            print '   --------------------------'
+            print ''
     else:
-        LCD.clear()
-        LCD.write(0,0, "System Normal")
-        print ''
-        print '   --------------------------'
-        print '   *  System Status Normal  *'
-        print '   --------------------------'
-        print ''
-
+        pass
 
 def loop():
     worker = Thread(target=queue_task, args=(q,))
     worker.setDaemon(True)
     worker.start()
+    alarm = Thread(target=alarm_task)
     status = 1
     count = 0
     q_count = 0
@@ -162,7 +171,7 @@ def loop():
             updates = []
             updates.append({'type' : 'temperature', 'value': str(temp), 'timestamp': str(datetime.now())})
             updates.append({'type' : 'gas', 'value': str(ADC.read(1)), 'timestamp': str(datetime.now())})
-            updates.append({'type' : 'rain', 'value': str(rainVal), 'timestamp': str(datetime.now())})
+            updates.append({'type' : 'rain', 'value': str(h2o), 'timestamp': str(datetime.now())})
             q.put(updates)
             q_count = 0
         q_count = q_count + 1
