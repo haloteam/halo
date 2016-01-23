@@ -1,5 +1,19 @@
 angular.module('halo.controllers', [])
 
+<<<<<<< HEAD
+.controller('DashCtrl', function($scope, Dash) {
+
+    $scope.total = 100;
+    $scope.temp = $scope.gas = $scope.rain = 0;
+
+    function parseSensorData() {
+        Dash.fetchSensorInfo().then(function(data){
+            $scope.temp = data.Item.currentTemp;
+            $scope.gas = data.Item.currentGas;
+            $scope.rain = data.Item.currentRain;
+            $scope.progress = Math.round(data.Item.currentTemp);
+        });
+=======
 .controller('DashCtrl', function($scope) {
 
   //$scope.sensors = Dash.fetchSensorInfo();
@@ -12,15 +26,18 @@ angular.module('halo.controllers', [])
     $scope.progress=5;
     $scope.add=function(){
       $scope.progress+=50;
+>>>>>>> 24ad159f37ee6d3f2d0f1aec5ffb618c53b89dca
     }
 
+    parseSensorData();
+    
 
-  var elem = document.querySelector('.draggable');
-        // Find your root SVG element
-  var svg = document.querySelector('svg');
-  console.log(svg);
-  // Create an SVGPoint for future math
-  var pt = svg.createSVGPoint();
+    var elem = document.querySelector('.draggable');
+    // Find your root SVG element
+    var svg = document.querySelector('svg');
+    console.log(svg);
+    // Create an SVGPoint for future math
+    var pt = svg.createSVGPoint();
 
   // Get point in global SVG space
   function cursorPoint(evt){
@@ -45,4 +62,8 @@ angular.module('halo.controllers', [])
     console.log(angle(loc.x,loc.y));
     console.log(2*Math.PI*96)*(angle(loc.x,loc.y)/360);
   },false);
+<<<<<<< HEAD
+});
+=======
 })
+>>>>>>> 24ad159f37ee6d3f2d0f1aec5ffb618c53b89dca

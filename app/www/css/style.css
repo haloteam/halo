@@ -25,3 +25,7 @@
 .round-progress{
     overflow: visible !important;
 }
+
+a > i > .icon .ion-fireball {
+    color: #FBC875;
+}
