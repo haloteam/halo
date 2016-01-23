@@ -2,8 +2,8 @@ angular.module('halo.controllers', [])
 
 .controller('DashCtrl', function($scope) {
 
-  $scope.sensors = Dash.fetchSensorInfo();
-  
+  //$scope.sensors = Dash.fetchSensorInfo();
+
   var hms = '00:04:33';   // your input string
   var a = hms.split(':'); // split it at the colons
 
@@ -46,6 +46,3 @@ angular.module('halo.controllers', [])
     console.log(2*Math.PI*96)*(angle(loc.x,loc.y)/360);
   },false);
 })
-
-
-});
