@@ -4,20 +4,41 @@
     <div class="progress-wrapper" style="">
             <div class="progress ng-binding" ng-style="getStyle()" style="top: 50%; bottom: auto; left: 50%; transform: translateY(-50%) translateX(-50%); font-size: 1.5em;">
               {{progress}}°F
+              <p style="margin-top: 0px; font-size: 0.25em; font-weight: 400; text-align: center;">Temperature</p>
              </div>
 
         <div id="temperatureProgress" style="text-align:center" round-progress max="total" current="progress" color="{{temperatureColor}}" bgcolor="#eaeaea" radius="100" stroke="8" semi="false" rounded="true" clockwise="true" responsive="false" duration="800" animation="easeInOutQuart"></div>
         </div>
 
+        <div class="progress ng-binding" ng-style="getStyle()" style="top: 50%; bottom: auto; left: 50%; transform: translateY(-50%) translateX(-50%); font-size: 1.5em;">
+          <h3 style="font-size: 2em; font-weight: 100; color: white; text-align: center; margin-top: 15px;">{{progressGas}}</h3>
+          <p style="margin-top: 0px; font-size: 0.8em; font-weight: 400; text-align: center;">Gas</p>
+         </div>
+
+         <div id="gasProgress" style="text-align:center" round-progress max="total" current="progress" color="{{temperatureColor}}" bgcolor="#eaeaea" radius="100" stroke="8" semi="false" rounded="true" clockwise="true" responsive="false" duration="800" animation="easeInOutQuart"></div>
+         </div>
+
+         <div class="progress ng-binding" ng-style="getStyle()" style="top: 85%; bottom: auto; left: 50%; transform: translateY(-50%) translateX(-50%); font-size: 1.5em;">
+           <h3 style="font-size: 2em; font-weight: 100; color: white;">{{progressRain}}</h3>
+           <p style="margin-top: 0px; font-size: 0.8em; font-weight: 400; text-align: center;">Water</p>
+          </div>
+
+          <div id="rainProgress" style="text-align:center" round-progress max="total" current="progress" color="{{temperatureColor}}" bgcolor="#eaeaea" radius="100" stroke="8" semi="false" rounded="true" clockwise="true" responsive="false" duration="800" animation="easeInOutQuart"></div>
+          </div>
+
         <!-- <div style="text-align:center" round-progress max="total" current="progress" color="#FC8053" bgcolor="#eaeaea" radius="100" stroke="8" semi="false" rounded="true" clockwise="true" responsive="false" duration="800" animation="easeInOutQuart"></div>
         </div> -->
-
+<!--
         <div style="border-radius: 5px; border: 0; width: auto; min-width: 300px; height: 50px; background-color: #FBC875;">
-            {{waterMessage}}
+            <p style="padding: 15px;">Current Amount of Flammable Gas: {{gas}}</p>
         </div>
 
+        <br />
+
         <div style="border-radius: 5px; border: 0; width: auto; min-width: 300px; height: 50px; background-color: #FBC875;">
+            <p style="padding: 15px;">Current Level of Water: {{rain}}</p>
         </div>
+    -->
 
       </ion-content>
 </ion-view>
