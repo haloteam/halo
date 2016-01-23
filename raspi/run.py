@@ -9,6 +9,13 @@ from threading import Thread
 import subprocess
 import json
 from datetime import datetime
+import wit
+
+wit_access_token = '5HO7GQT6GHYYBC4G2M5SPTCWXSNSEL4S'
+wit.init()
+
+IS_TALKING = False
+
 THERMISTOR = 17
 GAS_SENSOR = 18
 BUZZ = 6
@@ -30,7 +37,13 @@ def queue_task(q):
         data['updates'] = updates
         print data
         resp = subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), HALO_LAMBDA_URL])
-        print resp
+
+        if resp.action == "talking":
+            IS_TALKING = True
+            worker = Thread(target=speech_to_text, args=())
+            worker.setDaemon(True)
+            worker.start()
+
         q.task_done()
 
 
@@ -56,7 +69,24 @@ def print_gas(x):
         print '   ***************'
         print ''
 
-#def
+def speech_to_text():
+
+    # user is prompted to talk
+    speech_response = wit.voice_query_auto(wit_access_token)
+
+    # response
+    question = urllib.quote_plus(speech_response['_text'])
+    resp = subprocess.call(['curl', 'https://www.houndify.com/textSearch?query=' +  + '&clientId=e7SgQJ_wwXjv5cUx1nLqKQ%3D%3D&clientKey=Pi_smrHYQhCA_nLgukp4C4nnQE2WyQvk3l3Bhs8hcbchrLAmjl5LWS3ewq1U8LMser8j890OfhklwNm77baPTw%3D%3D', '-H', 'Accept-Encoding: gzip, deflate, sdch', '-H', 'Accept-Language: en-US,en;q=0.8', '-H', 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36', '-H', 'Accept: */*', '-H', 'Referer: https://www.houndify.com/try/986dcfd1-0b91-4346-a5a0-6d53f0d18da2', '-H',
+    'Cookie: houndify-sess=s%3Ar-94jGq48cQMay2q1fgRwSolHIV4ZQpk.Y3Wns0NNtM5LCgWUcaAc8MUdH3Z0elclREmfzZ%2BJzLY; _gat=1; _ga=GA1.2.1948120585.1453572520', '-H', 'Connection: keep-alive', '-H', 'Hound-Request-Info: {"ClientID":"e7SgQJ_wwXjv5cUx1nLqKQ==","UserID":"houndify_try_api_user","PartialTranscriptsDesired":true,"SDK":"web","SDKVersion":"0.1.6"}', '--compressed'])
+
+
+    answer = resp['answer']
+    # do something with answer
+    # speak the answer
+
+    IS_TALKING = False
+
+
 
 def loop():
     worker = Thread(target=queue_task, args=(q,))
