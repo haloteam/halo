@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('halo', ['ionic', 'halo.controllers', 'halo.services'])
+angular.module('halo', ['ionic', 'halo.controllers', 'halo.services', 'angular-svg-round-progress'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -39,7 +39,6 @@ angular.module('halo', ['ionic', 'halo.controllers', 'halo.services'])
   })
 
   // Each tab has its own nav history stack:
-
   .state('tab.dash', {
     url: '/dash',
     views: {
