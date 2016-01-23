@@ -38,7 +38,6 @@ def setup():
     GPIO.setup(GAS_SENSOR, GPIO.IN)
     GPIO.setup(BUZZ, GPIO.OUT)
     GPIO.output(BUZZ, 1)
-    ADC0832.setup()
 
 def print_gas(x):
     if x == 1:
