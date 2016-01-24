@@ -15,11 +15,11 @@ from espeak import espeak
 
 
 class Halo:
-	def __init__(self):
+    def __init__(self):
         self.THERMISTOR_PIN = 17
         self.GAS_SENSOR_PIN = 18
         self.BUZZ_PIN = 6
-        self.RAIN_PIN = 13
+        self.H2O_PIN = 13
         self.wit_access_token = '5HO7GQT6GHYYBC4G2M5SPTCWXSNSEL4S'
         self.halo_lambda_save_url = 'https://a9a0t0l599.execute-api.us-east-1.amazonaws.com/prod/Halo'
         self.save_data_queue = Queue(maxsize=0)
@@ -28,21 +28,23 @@ class Halo:
         self.gas = None
         self.h2o = None
 
+        self.inConversation = False
+
         self.setup()
 
     def setup(self):
         GPIO.setmode(GPIO.BCM)
         ADC.setup(0x48)
         LCD.init(0x27, 1)
-        #LCD.write(0,0,'System startup...')
+        self.alert("System startup")
         GPIO.setup(self.THERMISTOR_PIN, GPIO.IN)
         GPIO.setup(self.GAS_SENSOR_PIN, GPIO.IN)
         GPIO.setup(self.BUZZ_PIN, GPIO.OUT)
-        GPIO.setup(self.RAIN_PIN, GPIO.OUT)
+        GPIO.setup(self.H2O_PIN, GPIO.IN)
         wit.init()
 
     def begin_threads(self):
-        save_data_worker = Thread(target=save_data_thread, args=())
+        save_data_worker = Thread(target=self.save_data_thread, args=())
         save_data_worker.setDaemon(True)
         save_data_worker.start()
 
@@ -76,7 +78,17 @@ class Halo:
         espeak.synth(text)
 
     def displayText(self, text):
-        pass
+        if len(text) < 16:
+	    LCD.write(0,0,text)
+	else:
+	    while True:
+		tmp = text
+		time.sleep(0.5)
+		for i in range(0, len(text)):
+		    LCD.write(0,0,tmp)
+		    tmp = tmp[1:]
+		    time.sleep(0.15)
+		    LCD.clear()
 
     def get_temperature_sensor_data(self):
         analogTemp = ADC.read(0)
@@ -127,3 +139,22 @@ class Halo:
         # speak the answer
         espeak.synth(talk_answer)
         IS_TALKING = False
+
+
+    def destroy(self):
+    	LCD.clear()
+    	GPIO.output(self.BUZZ_PIN, GPIO.HIGH)
+    	GPIO.cleanup()
+
+if __name__ == "__main__":
+	try:
+		halo = Halo()
+#		halo.start()
+		LCD.init(0x27, 1)
+		print "LCD initialized... starting sequence"
+		halo.displayText("Hello my name is slim shady")
+	except KeyboardInterrupt:
+		print "Exiting Halo..."
+		halo.destroy()
+#	finally:
+#		halo.destroy()

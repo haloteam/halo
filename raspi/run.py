@@ -69,7 +69,7 @@ def alarm_task():
 	while True:
 		if ALARM_ON:
 			GPIO.output(BUZZ_PIN, GPIO.LOW)
-			time.sleep(2)
+			time.sleep(.5)
 			GPIO.output(BUZZ_PIN, GPIO.HIGH)
 		else:
 			pass
@@ -146,8 +146,7 @@ def update_LCD(temp, gas, h2o):
             print ''
         
         else:	
-	    print ALARM_ON.__repr__()
-            if ALARM_ON:
+	    if ALARM_ON:
                 ALARM_ON = False
             LCD.clear()
             LCD.write(0,0, "System Normal")
@@ -216,8 +215,6 @@ def destroy():
 	LCD.clear()
 	GPIO.output(BUZZ_PIN, GPIO.HIGH)
 	GPIO.output(H2O_PIN, GPIO.HIGH)
-	GPIO.output(THERMISTOR_PIN, GPIO.HIGH)
-	GPIO.output(GAS_SENSOR_PIN, GPIO.HIGH)
 	GPIO.cleanup()
 
 if __name__ == '__main__':
@@ -225,4 +222,6 @@ if __name__ == '__main__':
         setup()
         loop()
     except KeyboardInterrupt:
+	print "Exiting Halo..."
+    finally:
         destroy()

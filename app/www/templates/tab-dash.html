@@ -1,30 +1,31 @@
-<ion-view view-title="" style="background-image: url('./img/homebackground.png'); background-position: center; background-size: cover;">
+<ion-view view-title="HALO" style="background-image: url('./img/homebackground.png'); background-position: center; background-size: cover;">
   <ion-content class="padding">
-<img style="width:100px; display: block; margin: 0 auto" src="../img/Logo-bw.png">
-    <div class="progress-wrapper" style="">
-            <div class="progress ng-binding" ng-style="getStyle()" style="top: 50%; bottom: auto; left: 50%; transform: translateY(-50%) translateX(-50%); font-size: 1.5em;">
-              {{progress}}°F
-              <p style="margin-top: 0px; font-size: 0.25em; font-weight: 400; text-align: center;">Temperature</p>
-             </div>
 
-        <div id="temperatureProgress" style="text-align:center" round-progress max="total" current="progress" color="{{temperatureColor}}" bgcolor="#eaeaea" radius="100" stroke="8" semi="false" rounded="true" clockwise="true" responsive="false" duration="800" animation="easeInOutQuart"></div>
+        <div class="progress ng-binding" ng-style="getStyle()" style="top: 55px; bottom: auto; left: 50%; transform: translateY(-50%) translateX(-50%); font-size: 1.5em;">
+              <h3 style="font-size: 2em; font-weight: 100; color: white; text-align: center; margin-top: 100px;">{{temp}}°F</h3>
+              <p style="margin-top: 0px; font-size: 0.8em; font-weight: 400; text-align: center;">Temperature</p>
         </div>
 
-        <div class="progress ng-binding" ng-style="getStyle()" style="top: 50%; bottom: auto; left: 50%; transform: translateY(-50%) translateX(-50%); font-size: 1.5em;">
-          <h3 style="font-size: 2em; font-weight: 100; color: white; text-align: center; margin-top: 100px;">{{progressGas}}</h3>
-          <p style="margin-top: 0px; font-size: 0.8em; font-weight: 400; text-align: center;">Gas</p>
-         </div>
+        <div id="temperatureProgress" style="text-align:center;" round-progress max="total" current="temp" color="{{tempColor}}" bgcolor="#eaeaea" radius="100" stroke="8" semi="false" rounded="true" clockwise="true" responsive="false" duration="800" animation="easeInOutQuart"></div>
 
-         <div id="gasProgress" style="text-align:center" round-progress max="total" current="progress" color="{{temperatureColor}}" bgcolor="#eaeaea" radius="100" stroke="8" semi="false" rounded="true" clockwise="true" responsive="false" duration="800" animation="easeInOutQuart"></div>
-         </div>
+        <br />
 
-         <div class="progress ng-binding" ng-style="getStyle()" style="top: 85%; bottom: auto; left: 50%; transform: translateY(-50%) translateX(-50%); font-size: 1.5em;">
-           <h3 style="font-size: 2em; font-weight: 100; color: white;margin-top: 20px;">{{progressRain}}</h3>
-           <p style="margin-top: 0px; font-size: 0.8em; font-weight: 400; text-align: center;">Water</p>
+        <div class="progress ng-binding" ng-style="getStyle()" style="top: 275px; bottom: auto; left: 50%; transform: translateY(-50%) translateX(-50%); font-size: 1.5em;">
+            <h3 style="font-size: 2em; font-weight: 100; color: white; text-align: center; margin-top: 100px;">{{progressGas}}</h3>
+            <p style="margin-top: 0px; font-size: 0.8em; font-weight: 400; text-align: center;">Gas</p>
+        </div>
+
+         <div id="gasProgress" style="text-align:center" round-progress max="total" current="gas*100" color="{{gasColor}}" bgcolor="#eaeaea" radius="100" stroke="8" semi="false" rounded="true" clockwise="true" responsive="false" duration="800" animation="easeInOutQuart"></div>
+
+         <br />
+
+         <div class="progress ng-binding" ng-style="getStyle()" style="top: 530px; bottom: auto; left: 50%; transform: translateY(-50%) translateX(-50%); font-size: 1.5em;">
+             <h3 style="font-size: 2em; font-weight: 100; color: white;margin-top: 20px;">{{progressRain}}</h3>
+             <p style="margin-top: 0px; font-size: 0.8em; font-weight: 400; text-align: center;">Water</p>
           </div>
 
-          <div id="rainProgress" style="text-align:center" round-progress max="total" current="progress" color="{{temperatureColor}}" bgcolor="#eaeaea" radius="100" stroke="8" semi="false" rounded="true" clockwise="true" responsive="false" duration="800" animation="easeInOutQuart"></div>
-          </div>
+          <div id="rainProgress" style="text-align:center" round-progress max="total" current="rain*100" color="{{rainColor}}" bgcolor="#eaeaea" radius="100" stroke="8" semi="false" rounded="true" clockwise="true" responsive="false" duration="800" animation="easeInOutQuart"></div>
 
+      </div>
       </ion-content>
 </ion-view>
