@@ -218,6 +218,8 @@ class Halo:
 
     def destroy(self):
     	LCD.clear()
+        LCD.write(0,0,'')
+        LCD.write(0,1,'')
         self.set_eyes(0x00)
     	GPIO.output(self.BUZZ_PIN, GPIO.HIGH)
     	GPIO.cleanup()
