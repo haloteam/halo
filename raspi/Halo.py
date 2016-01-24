@@ -93,33 +93,41 @@ class Halo:
         self.begin_threads()
         while True:
             self.get_temperature_sensor_data()
+            time.sleep(0.25)
             self.get_gas_sensor_data()
+            time.sleep(0.25)
             self.get_h2o_sensor_data()
+            time.sleep(0.25)
             self.check_data()
 
     def check_data(self):
         if self.inConversation == False:
             if self.gas > 90:
-                self.alert("GAS OVERLOAD")
-
+                self.alert("GAS DETECTED!")
+            elif self.temp < 45:
+                self.alert("LOW TEMPERATURE!")
+            elif self.h2o < 215:
+                self.alert("WATER DETECTED!")
+            else:
+                self.display_text("SYSTEM NORMAL")
+            
     def alert(self, text):
-        self.displayText(text)
+        LCD.clear()
+        LCD.write(0,0,"ALERT!")
+        LCD.write(0,1,text)
+
+    def display_text(self, text):
+        LCD.clear()
+        if len(text) <= 16:
+            LCD.write(0,0,text)
+        else:
+            top = text[0:15]
+            bot = text[16:]
+            LCD.write(0,0,top)
+            LCD.write(0,1,bot)
 
     def speak(self, text):
         subprocess.call(["espeak", text])
-
-    def displayText(self, text):
-    	if len(text) < 16:
-    	    LCD.write(0,0,text)
-    	else:
-    	    while True:
-    		space = '      '
-    		tmp = space + text
-    		for i in range(0, len(text)):
-    		    LCD.write(0,0,tmp)
-    		    tmp = tmp[1:]
-    		    time.sleep(0.3)
-    		    LCD.clear()
 
     def mouth_open(self):
         LCD.clear()
@@ -141,10 +149,13 @@ class Halo:
     def get_temperature_sensor_data(self):
         analogTemp = ADC.read(0)
         Vr = 5 * float(analogTemp) / 255
-        Rt = 10000 * Vr / (5 - Vr)
-        temp = 1/(((math.log(Rt / 10000)) / 3950) + (1 / (273.15 + 25)))
-        self.temp = (temp - 273.15) * 9/5 + 32
-        return self.temp
+        try:
+            Rt = 10000 * Vr / (5 - Vr)
+            temp = 1/(((math.log(Rt / 10000)) / 3950) + (1 / (273.15 + 25)))
+            self.temp = (temp - 273.15) * 9/5 + 32
+            return self.temp
+        except:
+            print "Temp sensor read failed... analog temp = ", analogTemp
 
     def get_gas_sensor_data(self):
         self.gas = ADC.read(1)
@@ -230,11 +241,7 @@ class Halo:
 if __name__ == "__main__":
     try:
         halo = Halo()
-        halo.speak("Test speak")
-        t = Thread(target = halo.blink)
-        t.setDaemon(True)
-        t.start()
-        halo.talk()
+        halo.start()
     except KeyboardInterrupt:
         print "Exiting Halo..."
     finally:
