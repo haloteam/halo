@@ -198,10 +198,11 @@ class Halo:
             self.set_eyes(0x3f)
             time.sleep(rand1)
             self.set_eyes(0x40)
-            time.sleep(1)
+            time.sleep(0.4)
 
     def destroy(self):
     	LCD.clear()
+        self.set_eyes(0x00)
     	GPIO.output(self.BUZZ_PIN, GPIO.HIGH)
     	GPIO.cleanup()
 
