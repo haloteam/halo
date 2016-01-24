@@ -154,21 +154,23 @@ class Halo:
 
     def start_conversation(self):
         #speech_response = wit.voice_query_auto(self.wit_access_token)
-        conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
-        espeak.synth(random.choice(conversation_starters))
+        try:
+            conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
+            espeak.synth(random.choice(conversation_starters))
+        except Exception as err:
+            print err
         # user is prompted to talk
 
-        return
-        # response
-        question = urllib.quote_plus(speech_response['_text'])
-        resp = subprocess.call(['curl', 'https://www.houndify.com/textSearch?query=' + question + '&clientId=e7SgQJ_wwXjv5cUx1nLqKQ%3D%3D&clientKey=Pi_smrHYQhCA_nLgukp4C4nnQE2WyQvk3l3Bhs8hcbchrLAmjl5LWS3ewq1U8LMser8j890OfhklwNm77baPTw%3D%3D', '-H', 'Accept-Encoding: gzip, deflate, sdch', '-H', 'Accept-Language: en-US,en;q=0.8', '-H', 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36', '-H', 'Accept: */*', '-H', 'Referer: https://www.houndify.com/try/986dcfd1-0b91-4346-a5a0-6d53f0d18da2', '-H',
-        'Cookie: houndify-sess=s%3Ar-94jGq48cQMay2q1fgRwSolHIV4ZQpk.Y3Wns0NNtM5LCgWUcaAc8MUdH3Z0elclREmfzZ%2BJzLY; _gat=1; _ga=GA1.2.1948120585.1453572520', '-H', 'Connection: keep-alive', '-H', 'Hound-Request-Info: {"ClientID":"e7SgQJ_wwXjv5cUx1nLqKQ==","UserID":"houndify_try_api_user","PartialTranscriptsDesired":true,"SDK":"web","SDKVersion":"0.1.6"}', '--compressed'])
-        answer = json.parse(resp)
-        talk_answer = answer["AllResults"][0]['SpokenResponseLong'];
-        # do something with answer
-        # speak the answer
-        #espeak.synth(talk_answer)
-        IS_TALKING = False
+        # # response
+        # question = urllib.quote_plus(speech_response['_text'])
+        # resp = subprocess.call(['curl', 'https://www.houndify.com/textSearch?query=' + question + '&clientId=e7SgQJ_wwXjv5cUx1nLqKQ%3D%3D&clientKey=Pi_smrHYQhCA_nLgukp4C4nnQE2WyQvk3l3Bhs8hcbchrLAmjl5LWS3ewq1U8LMser8j890OfhklwNm77baPTw%3D%3D', '-H', 'Accept-Encoding: gzip, deflate, sdch', '-H', 'Accept-Language: en-US,en;q=0.8', '-H', 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36', '-H', 'Accept: */*', '-H', 'Referer: https://www.houndify.com/try/986dcfd1-0b91-4346-a5a0-6d53f0d18da2', '-H',
+        # 'Cookie: houndify-sess=s%3Ar-94jGq48cQMay2q1fgRwSolHIV4ZQpk.Y3Wns0NNtM5LCgWUcaAc8MUdH3Z0elclREmfzZ%2BJzLY; _gat=1; _ga=GA1.2.1948120585.1453572520', '-H', 'Connection: keep-alive', '-H', 'Hound-Request-Info: {"ClientID":"e7SgQJ_wwXjv5cUx1nLqKQ==","UserID":"houndify_try_api_user","PartialTranscriptsDesired":true,"SDK":"web","SDKVersion":"0.1.6"}', '--compressed'])
+        # answer = json.parse(resp)
+        # talk_answer = answer["AllResults"][0]['SpokenResponseLong'];
+        # # do something with answer
+        # # speak the answer
+        # #espeak.synth(talk_answer)
+        # IS_TALKING = False
 
     def set_eyes(self, dat):
         for bit in range(0,8):
