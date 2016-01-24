@@ -36,7 +36,7 @@ class Halo:
         GPIO.setmode(GPIO.BCM)
         ADC.setup(0x48)
         LCD.init(0x27, 1)
-        # (replace with alert function) LCD.write(0,0,'System startup...')
+	self.alert("System startup")
         GPIO.setup(self.THERMISTOR_PIN, GPIO.IN)
         GPIO.setup(self.GAS_SENSOR_PIN, GPIO.IN)
         GPIO.setup(self.BUZZ_PIN, GPIO.OUT)
@@ -74,14 +74,13 @@ class Halo:
         if len(text) < 16:
 	    LCD.write(0,0,text)
 	else:
-	    space = '               '
-	    text = space + text
 	    while True:
 		tmp = text
+		time.sleep(0.5)
 		for i in range(0, len(text)):
 		    LCD.write(0,0,tmp)
 		    tmp = tmp[1:]
-		    time.sleep(0.8)
+		    time.sleep(0.15)
 		    LCD.clear()	
 
     def get_temperature_sensor_data(self):
@@ -118,13 +117,16 @@ class Halo:
 
     def destroy(self):
 	LCD.clear()
-	GPIO.output(BUZZ_PIN, GPIO.HIGH)
+	GPIO.output(self.BUZZ_PIN, GPIO.HIGH)
 	GPIO.cleanup()
 
 if __name__ == "__main__":
 	try:
 		halo = Halo()
-		halo.start()
+#		halo.start()
+		LCD.init(0x27, 1)
+		print "LCD initialized... starting sequence"
+		halo.displayText("Hello my name is slim shady")
 	except KeyboardInterrupt:
 		print "Exiting Halo..."
 		halo.destroy()
