@@ -1,23 +1,15 @@
-<!--
-Create tabs with an icon and label, using the tabs-positive style.
-Each tab's child <ion-nav-view> directive will have its own
-navigation history that also transitions its views in and out.
--->
-<ion-tabs style='opacity:0' class="tabs-icon-top tabs-color-active-positive">
+<ion-side-menus>
+  <!-- Left menu -->
+  <ion-side-menu side="left" style="background-color: #202020;">
+      <ion-content>
+          <ion-list>
+              <ion-item nav-clear menu-close href="#/app/home">Home</ion-item>
+          </ion-list>
+      </ion-conten>
+  </ion-side-menu>
 
-  <!-- Dashboard Tab -->
-  <ion-tab title="Dashboard" icon-off="ion-fireball" icon-on="ion-fireball" href="#/tab/dash">
-      <!-- <img style="background: none; width:100px; display: block; margin: 0 auto;" src="../img/Logo.png"> -->
-    <ion-nav-view name="tab-dash"></ion-nav-view>
-  </ion-tab>
+  <ion-side-menu-content>
+      <ion-nav-view name="tab-dash"></ion-nav-view>
+  </ion-side-menu-content>
 
-  <!-- <ion-tab title="Gas" icon-off="ion-ios-chatboxes-outline" icon-on="ion-ios-chatboxes" href="#/tab/chats">
-    <ion-nav-view name="tab-chats"></ion-nav-view>
-  </ion-tab>
-
-  <ion-tab title="Voltage" icon-off="ion-ios-gear-outline" icon-on="ion-ios-gear" href="#/tab/account">
-    <ion-nav-view name="tab-account"></ion-nav-view>
-</ion-tab> -->
-
-
-</ion-tabs>
+</ion-side-menus>

@@ -12,7 +12,6 @@ angular.module('halo.controllers', [])
             $scope.temp = Math.round(data.Item.currentTemp);
             $scope.gas = Math.round(data.Item.currentGas);
             $scope.rain = Math.round(data.Item.currentRain);
-            console.log(data);
         }).then(function(data){
             if ($scope.temp > 90){
                 $scope.tempColor = "#d50000";
@@ -39,13 +38,13 @@ angular.module('halo.controllers', [])
 
     parseSensorData();
 
-    for (var i = 0; i < 100; i++) {
+    /* for (var i = 0; i < 100; i++) {
         (function (i) {
             setTimeout(function () {
                 parseSensorData();
             }, 3000)
         })(i)
-    }
+    } */
 
     var elem = document.querySelector('.draggable');
     // Find your root SVG element
@@ -53,5 +52,11 @@ angular.module('halo.controllers', [])
     console.log(svg);
     // Create an SVGPoint for future math
     var pt = svg.createSVGPoint();
+
+    function ContentController($scope, $ionicSideMenuDelegate) {
+        $scope.toggleLeft = function() {
+            $ionicSideMenuDelegate.toggleLeft();
+        };
+    }
 
 });
