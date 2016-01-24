@@ -38,7 +38,6 @@ class Halo:
 
         self.inConversation = False
         self.setup()
-        speech_response = wit.voice_query_auto(self.wit_access_token)
 
     def setup(self):
         GPIO.setmode(GPIO.BCM)
@@ -52,7 +51,7 @@ class Halo:
         GPIO.setup(self.BUZZ_PIN, GPIO.OUT)
         GPIO.setup(self.H2O_PIN, GPIO.IN)
         wit.init()
-
+        speech_response = wit.voice_query_auto(self.wit_access_token)
 
         # setup pins for "eyes"
         # first eye
