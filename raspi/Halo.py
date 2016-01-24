@@ -10,6 +10,7 @@ from threading import Thread
 import subprocess
 import json
 from datetime import datetime
+from espeak import espeak
 #import wit
 import random
 
@@ -34,7 +35,6 @@ class Halo:
         self.h2o = None
 
         self.inConversation = False
-
         self.setup()
 
     def setup(self):
@@ -48,6 +48,7 @@ class Halo:
         GPIO.setup(self.GAS_SENSOR_PIN, GPIO.IN)
         GPIO.setup(self.BUZZ_PIN, GPIO.OUT)
         GPIO.setup(self.H2O_PIN, GPIO.IN)
+
         
         # setup pins for "eyes"
         GPIO.setup(self.SDI_0, GPIO.OUT)
@@ -59,10 +60,13 @@ class Halo:
 
         #wit.init()
 
+
     def begin_threads(self):
         save_data_worker = Thread(target=self.save_data_thread, args=())
         save_data_worker.setDaemon(True)
         save_data_worker.start()
+        conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
+        espeak.synth(random.choice(conversation_starters))
 
     # be careful, may cause conflicts in runtime
     # params is tuple of parameters
@@ -130,19 +134,23 @@ class Halo:
 
     def save_data_task(self):
         updates = []
-        updates.append({'type' : 'temperature', 'value': str(self.get_temperature_sensor_data()), 'timestamp': str(datetime.now())})
-        updates.append({'type' : 'gas', 'value': str(self.get_gas_sensor_data()), 'timestamp': str(datetime.now())})
-        updates.append({'type' : 'rain', 'value': str(self.get_h2o_sensor_data()), 'timestamp': str(datetime.now())})
+        if self.get_temperature_sensor_data() is not None:
+            updates.append({'type' : 'temperature', 'value': str(self.get_temperature_sensor_data()), 'timestamp': str(datetime.now())})
+
+        if self.get_gas_sensor_data() is not None:
+            updates.append({'type' : 'gas', 'value': str(self.get_gas_sensor_data()), 'timestamp': str(datetime.now())})
+
+        if self.get_h2o_sensor_data() is not None:
+            updates.append({'type' : 'rain', 'value': str(self.get_h2o_sensor_data()), 'timestamp': str(datetime.now())})
         data = {}
         data['deviceId'] = 1;
         data['updates'] = updates
         data['action'] = "save"
         subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), self.halo_lambda_save_url])
 
-
     def start_conversation(self):
-        #conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
-        #espeak.synth(random.choice(conversation_starters))
+        conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
+        espeak.synth(random.choice(conversation_starters))
         # user is prompted to talk
         speech_response = wit.voice_query_auto(self.wit_access_token)
 
@@ -186,7 +194,6 @@ class Halo:
     	LCD.clear()
     	GPIO.output(self.BUZZ_PIN, GPIO.HIGH)
     	GPIO.cleanup()
-
 
 if __name__ == "__main__":
 	try:
