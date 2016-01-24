@@ -12,6 +12,7 @@ import json
 from datetime import datetime
 import wit
 import random
+from espeak import espeak
 
 class Halo:
     def __init__(self):
@@ -208,8 +209,5 @@ if __name__ == "__main__":
 		#halo.displayText("Hello my name is slim shady")
 	except KeyboardInterrupt:
 		print "Exiting Halo..."
-    except Exception as err:
-        print err
 	finally
-        print err
 		halo.destroy()
