@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+import wit
+wit.init()
+speech_response = wit.voice_query_auto('5HO7GQT6GHYYBC4G2M5SPTCWXSNSEL4S')
+print "_____________"
 import httplib, urllib
 import PCF8591 as ADC
 import LCD1602 as LCD
@@ -10,7 +14,7 @@ from threading import Thread
 import subprocess
 import json
 from datetime import datetime
-import wit
+
 from espeak import espeak
 import random
 from wit_test import start_wit, outputQueue
