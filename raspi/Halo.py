@@ -185,9 +185,9 @@ class Halo:
             print "blinking"
             rand1 = random.randint(3,6)
             rand2 = random.randint(1,3)
-            set_eyes(0x3f)
+            self.set_eyes(0x3f)
             time.sleep(rand1)
-            set_eyes(0x40)
+            self.set_eyes(0x40)
             time.sleep(rand2)
 
     def destroy(self):
