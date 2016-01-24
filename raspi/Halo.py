@@ -109,8 +109,8 @@ class Halo:
             if self.gas > 90:
                 self.alert("GAS DETECTED!")
                 self.alarmOn = True
-            elif self.temp < 45:
-                self.alert("LOW TEMPERATURE!")
+            elif self.temp > 85:
+                self.alert("HIGH TEMP!")
                 self.alarmOn = True
             elif self.h2o < 215:
                 self.alert("WATER DETECTED!")
