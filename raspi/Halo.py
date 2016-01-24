@@ -50,11 +50,6 @@ class Halo:
         GPIO.setup(self.GAS_SENSOR_PIN, GPIO.IN)
         GPIO.setup(self.BUZZ_PIN, GPIO.OUT)
         GPIO.setup(self.H2O_PIN, GPIO.IN)
-        try:
-            wit.init()
-            speech_response = wit.voice_query_auto(self.wit_access_token)
-        except Exception as err:
-            print err
 
         # setup pins for "eyes"
         # first eye
