@@ -157,9 +157,9 @@ class Halo:
         subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), self.halo_lambda_save_url])
 
     def start_conversation(self):
-        speech_response = wit.voice_query_auto(self.wit_access_token)
-        #conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
-        #espeak.synth(random.choice(conversation_starters))
+        #speech_response = wit.voice_query_auto(self.wit_access_token)
+        conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
+        espeak.synth(random.choice(conversation_starters))
         # user is prompted to talk
 
         return
