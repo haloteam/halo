@@ -27,6 +27,8 @@ class Halo:
         self.save_data_queue = Queue(maxsize=0)
 
         self.wit_process = Process(target=start_wit, args=())
+        self.wit_process.daemon = True
+        self.wit_process.start()        # Launch reader() as a separate python process
 
         self.temperature = None
         self.gas = None
