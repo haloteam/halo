@@ -204,6 +204,7 @@ class Halo:
 
 if __name__ == "__main__":
     halo = Halo()
+    halo.start_conversation()
 	# try:
     #     halo = Halo()
     #     halo.start_conversation()
