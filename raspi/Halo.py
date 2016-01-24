@@ -128,10 +128,12 @@ class Halo:
 
 
     def start_conversation(self):
+
         #conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
         #espeak.synth(random.choice(conversation_starters))
         # user is prompted to talk
-        speech_response = wit.voice_query_auto(self.wit_access_token)
+        print outputQueue.get()
+        #speech_response = wit.voice_query_auto(self.wit_access_token)
 
         # response
         question = urllib.quote_plus(speech_response['_text'])
@@ -150,6 +152,7 @@ class Halo:
     	GPIO.cleanup()
 
 halo = Halo()
+halo.start_conversation()
 #
 # if __name__ == "__main__":
 # 	try:
