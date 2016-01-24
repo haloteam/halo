@@ -2,7 +2,7 @@ import wit
 from multiprocessing import Process, Queue
 import time
 
-ouputQueue = Queue()
+outputQueue = Queue()
 
 def start_wit():
     wit.init()
@@ -10,4 +10,3 @@ def start_wit():
     while True:
         resp = wit.voice_query_auto(wit_access_token)
         outputQueue.put(resp)
-        
