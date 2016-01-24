@@ -12,6 +12,7 @@ import json
 from datetime import datetime
 import wit
 import random
+from espeak import espeak
 
 class Halo:
     def __init__(self):
@@ -50,12 +51,7 @@ class Halo:
         GPIO.setup(self.GAS_SENSOR_PIN, GPIO.IN)
         GPIO.setup(self.BUZZ_PIN, GPIO.OUT)
         GPIO.setup(self.H2O_PIN, GPIO.IN)
-        try:
-            wit.init()
-            speech_response = wit.voice_query_auto(self.wit_access_token)
-        except Exception as err:
-            print err
-        
+
         # setup pins for "eyes"
         # first eye
         GPIO.setup(self.SDI_0, GPIO.OUT)
@@ -177,22 +173,24 @@ class Halo:
         subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), self.halo_lambda_save_url])
 
     def start_conversation(self):
-        speech_response = wit.voice_query_auto(self.wit_access_token)
-        #conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
-        #espeak.synth(random.choice(conversation_starters))
+        #speech_response = wit.voice_query_auto(self.wit_access_token)
+        try:
+            conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
+            espeak.synth(random.choice(conversation_starters))
+        except Exception as err:
+            print err
         # user is prompted to talk
 
-
-        # response
-        question = urllib.quote_plus(speech_response['_text'])
-        resp = subprocess.call(['curl', 'https://www.houndify.com/textSearch?query=' + question + '&clientId=e7SgQJ_wwXjv5cUx1nLqKQ%3D%3D&clientKey=Pi_smrHYQhCA_nLgukp4C4nnQE2WyQvk3l3Bhs8hcbchrLAmjl5LWS3ewq1U8LMser8j890OfhklwNm77baPTw%3D%3D', '-H', 'Accept-Encoding: gzip, deflate, sdch', '-H', 'Accept-Language: en-US,en;q=0.8', '-H', 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36', '-H', 'Accept: */*', '-H', 'Referer: https://www.houndify.com/try/986dcfd1-0b91-4346-a5a0-6d53f0d18da2', '-H',
-        'Cookie: houndify-sess=s%3Ar-94jGq48cQMay2q1fgRwSolHIV4ZQpk.Y3Wns0NNtM5LCgWUcaAc8MUdH3Z0elclREmfzZ%2BJzLY; _gat=1; _ga=GA1.2.1948120585.1453572520', '-H', 'Connection: keep-alive', '-H', 'Hound-Request-Info: {"ClientID":"e7SgQJ_wwXjv5cUx1nLqKQ==","UserID":"houndify_try_api_user","PartialTranscriptsDesired":true,"SDK":"web","SDKVersion":"0.1.6"}', '--compressed'])
-        answer = json.parse(resp)
-        talk_answer = answer["AllResults"][0]['SpokenResponseLong'];
-        # do something with answer
-        # speak the answer
-        #espeak.synth(talk_answer)
-        IS_TALKING = False
+        # # response
+        # question = urllib.quote_plus(speech_response['_text'])
+        # resp = subprocess.call(['curl', 'https://www.houndify.com/textSearch?query=' + question + '&clientId=e7SgQJ_wwXjv5cUx1nLqKQ%3D%3D&clientKey=Pi_smrHYQhCA_nLgukp4C4nnQE2WyQvk3l3Bhs8hcbchrLAmjl5LWS3ewq1U8LMser8j890OfhklwNm77baPTw%3D%3D', '-H', 'Accept-Encoding: gzip, deflate, sdch', '-H', 'Accept-Language: en-US,en;q=0.8', '-H', 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36', '-H', 'Accept: */*', '-H', 'Referer: https://www.houndify.com/try/986dcfd1-0b91-4346-a5a0-6d53f0d18da2', '-H',
+        # 'Cookie: houndify-sess=s%3Ar-94jGq48cQMay2q1fgRwSolHIV4ZQpk.Y3Wns0NNtM5LCgWUcaAc8MUdH3Z0elclREmfzZ%2BJzLY; _gat=1; _ga=GA1.2.1948120585.1453572520', '-H', 'Connection: keep-alive', '-H', 'Hound-Request-Info: {"ClientID":"e7SgQJ_wwXjv5cUx1nLqKQ==","UserID":"houndify_try_api_user","PartialTranscriptsDesired":true,"SDK":"web","SDKVersion":"0.1.6"}', '--compressed'])
+        # answer = json.parse(resp)
+        # talk_answer = answer["AllResults"][0]['SpokenResponseLong'];
+        # # do something with answer
+        # # speak the answer
+        # #espeak.synth(talk_answer)
+        # IS_TALKING = False
 
     def set_eyes(self, dat):
         for bit in range(0,8):
@@ -225,13 +223,17 @@ class Halo:
     	GPIO.cleanup()
 
 if __name__ == "__main__":
-	try:
-		halo = Halo()
-		halo.blink()
-		#LCD.init(0x27, 1)
-		#print "LCD initialized... starting sequence"
-		#halo.displayText("Hello my name is slim shady")
-	except KeyboardInterrupt:
-		print "Exiting Halo..."
-	finally:
-		halo.destroy()
+    halo = Halo()
+    espeak.synth("hello charles")
+    #halo.start_conversation()
+	# try:
+    #     halo = Halo()
+    #     halo.start_conversation()
+	# 	#LCD.init(0x27, 1)
+	# 	#print "LCD initialized... starting sequence"
+	# 	#halo.displayText("Hello my name is slim shady")
+	# except KeyboardInterrupt:
+	# 	print "Exiting Halo..."
+	# finally:
+    #     print 'about to destroy'
+	# 	halo.destroy()
