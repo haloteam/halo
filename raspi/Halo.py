@@ -203,6 +203,7 @@ class Halo:
         data['updates'] = updates
         data['action'] = "save"
         subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), self.halo_lambda_save_url])
+        time.sleep(3)
 
     def start_conversation(self):
         #speech_response = wit.voice_query_auto(self.wit_access_token)
