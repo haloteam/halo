@@ -10,3 +10,4 @@ def start_wit():
     while True:
         resp = wit.voice_query_auto(wit_access_token)
         outputQueue.put(resp)
+        
