@@ -12,7 +12,7 @@ import json
 from datetime import datetime
 import wit
 from espeak import espeak
-
+import random
 
 class Halo:
     def __init__(self):
@@ -124,8 +124,8 @@ class Halo:
 
 
     def start_conversation(self):
-        #starts = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
-
+        conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
+        espeak.synth(random.choice(conversation_starters))
         # user is prompted to talk
         speech_response = wit.voice_query_auto(self.wit_access_token)
 
@@ -139,7 +139,6 @@ class Halo:
         # speak the answer
         espeak.synth(talk_answer)
         IS_TALKING = False
-
 
     def destroy(self):
     	LCD.clear()
