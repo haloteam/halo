@@ -16,6 +16,9 @@ import random
 from wit_test import start_wit, outputQueue
 from multiprocessing import Process, Queue
 
+wit.init()
+speech_response = wit.voice_query_auto('5HO7GQT6GHYYBC4G2M5SPTCWXSNSEL4S')
+
 class Halo:
     def __init__(self):
         self.THERMISTOR_PIN = 17
