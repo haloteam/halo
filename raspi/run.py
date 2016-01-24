@@ -11,36 +11,51 @@ import subprocess
 import json
 from datetime import datetime
 import wit
+from espeak import espeak
 
-# wit init
+
+#------------ INITIALIZATIONS -----------_#
+# wit
 wit_access_token = '5HO7GQT6GHYYBC4G2M5SPTCWXSNSEL4S'
-wit.init()
+
+# GLOBALS
 IS_TALKING = False
-ALARM = False
+ALARM_ON = False
+HALO_LAMBDA_URL = "https://a9a0t0l599.execute-api.us-east-1.amazonaws.com/prod/Halo"
 
+THERMISTOR_PIN = 17
+GAS_SENSOR_PIN = 18
+BUZZ_PIN = 6
+RAIN_PIN = 13
 
-THERMISTOR = 17
-GAS_SENSOR = 18
-BUZZ = 6
-RAIN = 13
 
 GPIO.setmode(GPIO.BCM)
-
-HALO_LAMBDA_URL = "https://a9a0t0l599.execute-api.us-east-1.amazonaws.com/prod/Halo"
 
 # queue init
 q = Queue(maxsize=0)
 
+def setup():
+    ADC.setup(0x48)
+    LCD.init(0x27, 1)
+    LCD.write(0,0,'System startup...')
+    time.sleep(1)
+    LCD.clear()
+    GPIO.setup(THERMISTOR, GPIO.IN)
+    GPIO.setup(GAS_SENSOR, GPIO.IN)
+    GPIO.setup(BUZZ, GPIO.OUT)
+    GPIO.setup(RAIN, GPIO.OUT)
+    GPIO.output(BUZZ, 1)
+    wit.init()
+
 def queue_task(q):
     while True:
         updates = q.get()
-        print updates
         data = {}
         data['deviceId'] = 1;
         data['updates'] = updates
         data['action'] = "save"
-        resp = subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), HALO_LAMBDA_URL])
-        print resp, 'resp'
+        raw_resp = subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), HALO_LAMBDA_URL])
+        resp = json.loads(raw_resp)
         if resp.action == "talking":
             IS_TALKING = True
             worker = Thread(target=speech_to_text, args=())
@@ -58,39 +73,25 @@ def alarm_task():
 		else:
 			pass
 
-
 def speech_to_text():
-
     # user is prompted to talk
     speech_response = wit.voice_query_auto(wit_access_token)
-
     # response
     question = urllib.quote_plus(speech_response['_text'])
-    resp = subprocess.call(['curl', 'https://www.houndify.com/textSearch?query=' +  + '&clientId=e7SgQJ_wwXjv5cUx1nLqKQ%3D%3D&clientKey=Pi_smrHYQhCA_nLgukp4C4nnQE2WyQvk3l3Bhs8hcbchrLAmjl5LWS3ewq1U8LMser8j890OfhklwNm77baPTw%3D%3D', '-H', 'Accept-Encoding: gzip, deflate, sdch', '-H', 'Accept-Language: en-US,en;q=0.8', '-H', 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36', '-H', 'Accept: */*', '-H', 'Referer: https://www.houndify.com/try/986dcfd1-0b91-4346-a5a0-6d53f0d18da2', '-H',
+    resp = subprocess.call(['curl', 'https://www.houndify.com/textSearch?query=' + question + '&clientId=e7SgQJ_wwXjv5cUx1nLqKQ%3D%3D&clientKey=Pi_smrHYQhCA_nLgukp4C4nnQE2WyQvk3l3Bhs8hcbchrLAmjl5LWS3ewq1U8LMser8j890OfhklwNm77baPTw%3D%3D', '-H', 'Accept-Encoding: gzip, deflate, sdch', '-H', 'Accept-Language: en-US,en;q=0.8', '-H', 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36', '-H', 'Accept: */*', '-H', 'Referer: https://www.houndify.com/try/986dcfd1-0b91-4346-a5a0-6d53f0d18da2', '-H',
     'Cookie: houndify-sess=s%3Ar-94jGq48cQMay2q1fgRwSolHIV4ZQpk.Y3Wns0NNtM5LCgWUcaAc8MUdH3Z0elclREmfzZ%2BJzLY; _gat=1; _ga=GA1.2.1948120585.1453572520', '-H', 'Connection: keep-alive', '-H', 'Hound-Request-Info: {"ClientID":"e7SgQJ_wwXjv5cUx1nLqKQ==","UserID":"houndify_try_api_user","PartialTranscriptsDesired":true,"SDK":"web","SDKVersion":"0.1.6"}', '--compressed'])
-
-
-    answer = resp['answer']
+    answer = json.parse(resp)
+    talk_answer = answer["AllResults"][0]['SpokenResponseLong'];
     # do something with answer
     # speak the answer
-
+    espeak.synth(talk_answer)
     IS_TALKING = False
 
 def mouth_open():
     LCD.clear()
     LCD.write(0,0,"")
 
-def setup():
-    ADC.setup(0x48)
-    LCD.init(0x27, 1)
-    LCD.write(0,0,'System startup...')
-    time.sleep(1)
-    LCD.clear()
-    GPIO.setup(THERMISTOR, GPIO.IN)
-    GPIO.setup(GAS_SENSOR, GPIO.IN)
-    GPIO.setup(BUZZ, GPIO.OUT)
-    GPIO.setup(RAIN, GPIO.OUT)
-    GPIO.output(BUZZ, 1)
+
 
 def update_LCD(temp, gas, h2o):
     if not IS_TALKING:
@@ -148,8 +149,8 @@ def loop():
     worker.setDaemon(True)
     worker.start()
     alarm_thread = Thread(target=alarm_task)
-	alarm_thread.setDeamon(True)
-	alarm_thread.start()
+    alarm_thread.setDeamon(True)
+    alarm_thread.start()
     status = 1
     count = 0
     q_count = 0
