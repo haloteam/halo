@@ -202,17 +202,16 @@ class Halo:
     	GPIO.output(self.BUZZ_PIN, GPIO.HIGH)
     	GPIO.cleanup()
 
-print '1'
 if __name__ == "__main__":
-	try:
-		halo = Halo()
-        halo.start_conversation()
-        print 'conversation'
-		#LCD.init(0x27, 1)
-		#print "LCD initialized... starting sequence"
-		#halo.displayText("Hello my name is slim shady")
-	except KeyboardInterrupt:
-		print "Exiting Halo..."
-	finally:
-        print 'about to destroy'
-		halo.destroy()
+    halo = Halo()
+	# try:
+    #     halo = Halo()
+    #     halo.start_conversation()
+	# 	#LCD.init(0x27, 1)
+	# 	#print "LCD initialized... starting sequence"
+	# 	#halo.displayText("Hello my name is slim shady")
+	# except KeyboardInterrupt:
+	# 	print "Exiting Halo..."
+	# finally:
+    #     print 'about to destroy'
+	# 	halo.destroy()
