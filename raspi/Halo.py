@@ -26,9 +26,6 @@ class Halo:
         self.halo_lambda_save_url = 'https://a9a0t0l599.execute-api.us-east-1.amazonaws.com/prod/Halo'
         self.save_data_queue = Queue(maxsize=0)
 
-        self.wit_process = Process(target=start_wit, args=())
-        self.wit_process.daemon = True
-        self.wit_process.start()        # Launch reader() as a separate python process
 
         self.temperature = None
         self.gas = None
@@ -36,6 +33,9 @@ class Halo:
 
         self.inConversation = False
 
+        wit.init()
+        speech_response = wit.voice_query_auto(self.wit_access_token)
+        print speech_response
         self.setup()
         self.start_conversation()
 
