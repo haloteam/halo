@@ -24,7 +24,6 @@ class Halo:
         self.halo_lambda_save_url = 'https://a9a0t0l599.execute-api.us-east-1.amazonaws.com/prod/Halo'
         self.save_data_queue = Queue(maxsize=0)
 
-        self.wit = wit
         self.temperature = None
         self.gas = None
         self.h2o = None
@@ -127,9 +126,9 @@ class Halo:
 
     def start_conversation(self):
         conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
-        espeak.synth(random.choice(conversation_starters))
+        #espeak.synth(random.choice(conversation_starters))
         # user is prompted to talk
-        speech_response = self.wit.voice_query_auto(self.wit_access_token)
+        speech_response = wit.voice_query_auto(self.wit_access_token)
 
         # response
         question = urllib.quote_plus(speech_response['_text'])
