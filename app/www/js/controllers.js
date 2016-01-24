@@ -4,9 +4,11 @@ angular.module('halo.controllers', [])
 
     $scope.total = 100;
     $scope.temp = $scope.gas = $scope.rain = 0;
-    $scope.progressGas = $scope.progressRain = "None";
+    $scope.progressGas = $scope.progressRain = "Safe";
     $scope.rainColor = $scope.gasColor = "#64DD17";
-
+    setTimeout(function() {
+      location.reload();
+    }, 10000)
     function parseSensorData() {
         Dash.fetchSensorInfo().then(function(data){
             $scope.temp = Math.round(data.Item.currentTemp);
@@ -58,5 +60,17 @@ angular.module('halo.controllers', [])
             $ionicSideMenuDelegate.toggleLeft();
         };
     }
+
+})
+
+.controller('WeatherCtrl', function($scope, Question) {
+  $scope.submitQuestion = function() {
+    Question.askQuestion($scope.questionInput).then(function(data) {
+      console.log(data)
+      $scope.answer = data;
+      $scope.results = answer.AllResults;
+      console.log($scope.results);
+    });
+  }
 
 });

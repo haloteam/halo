@@ -118,7 +118,7 @@ class Halo:
             else:
                 self.display_text("SYSTEM NORMAL")
                 self.alarmOn = False
-            
+
     def alarm(self):
         while True:
             if self.alarmOn:

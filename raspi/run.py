@@ -144,8 +144,8 @@ def update_LCD(temp, gas, h2o):
             print '   * Danger Water Detected! *'
             print '   **************************'
             print ''
-        
-        else:	
+
+        else:
 	    if ALARM_ON:
                 ALARM_ON = False
             LCD.clear()

@@ -49,6 +49,16 @@ angular.module('halo', ['ionic', 'halo.controllers', 'halo.services', 'angular-s
     }
   })
 
+  .state('tab.weather', {
+    url: '/weather',
+    views: {
+      'tab-weather': {
+        templateUrl: 'templates/tab-weather.html',
+        controller: 'WeatherCtrl'
+      }
+    }
+  })
+
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/dash');
 

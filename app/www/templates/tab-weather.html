@@ -1,0 +1,21 @@
+<ion-view view-title="Ask Houndify" style="background-image: url('./img/homebackground.png'); background-position: center; background-size: cover;">
+  <ion-content class="padding">
+
+    <div class="list list-inset">
+      <label class="item item-input">
+        <i class="icon ion-search placeholder-icon"></i>
+        <input type="text" ng-model="questionInput" placeholder="Search">
+      </label>
+    </div>
+    <button ng-click="submitQuestion()" class="button button-full button-positive">
+      Submit
+    </button>
+
+    <ion-list style='margin-top:20px'>
+      <ion-item ng-repeat="item in results">
+        {{item.WrittenResponse}}
+      </ion-item>
+    </ion-list>
+
+  </ion-content>
+</ion-view>
