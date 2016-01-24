@@ -28,6 +28,8 @@ class Halo:
         self.gas = None
         self.h20 = None
 
+        self.setup()
+
     def setup(self):
         GPIO.setmode(GPIO.BCM)
         ADC.setup(0x48)
@@ -43,9 +45,10 @@ class Halo:
         save_data_worker = Thread(target=save_data_thread, args=())
         save_data_worker.setDaemon(True)
         save_data_worker.start()
-        
+
 
     def start(self):
+        self.begin_threads()
         while True:
             self.get_temperature_sensor_data()
             self.get_gas_sensor_data()
