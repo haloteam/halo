@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import wit
 import httplib, urllib
 import PCF8591 as ADC
 import LCD1602 as LCD
@@ -11,12 +10,10 @@ from threading import Thread
 import subprocess
 import json
 from datetime import datetime
+import wit
 from espeak import espeak
 import random
-from multiprocessing import Process, Queue
-
-wit.init()
-speech_response = wit.voice_query_auto('5HO7GQT6GHYYBC4G2M5SPTCWXSNSEL4S')
+from wit_test import start_wit, outputQueue
 
 class Halo:
     def __init__(self):
@@ -27,17 +24,12 @@ class Halo:
         self.wit_access_token = '5HO7GQT6GHYYBC4G2M5SPTCWXSNSEL4S'
         self.halo_lambda_save_url = 'https://a9a0t0l599.execute-api.us-east-1.amazonaws.com/prod/Halo'
         self.save_data_queue = Queue(maxsize=0)
-
-
         self.temperature = None
         self.gas = None
         self.h2o = None
 
         self.inConversation = False
 
-        wit.init()
-        speech_response = wit.voice_query_auto(self.wit_access_token)
-        print speech_response
         self.setup()
         self.start_conversation()
 
@@ -50,7 +42,7 @@ class Halo:
         GPIO.setup(self.GAS_SENSOR_PIN, GPIO.IN)
         GPIO.setup(self.BUZZ_PIN, GPIO.OUT)
         GPIO.setup(self.H2O_PIN, GPIO.IN)
-        #wit.init()
+        wit.init()
 
     def begin_threads(self):
         save_data_worker = Thread(target=self.save_data_thread, args=())
@@ -133,12 +125,10 @@ class Halo:
 
 
     def start_conversation(self):
-
-        #conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
+        conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
         #espeak.synth(random.choice(conversation_starters))
         # user is prompted to talk
-        print outputQueue.get()
-        #speech_response = wit.voice_query_auto(self.wit_access_token)
+        speech_response = wit.voice_query_auto(self.wit_access_token)
 
         # response
         question = urllib.quote_plus(speech_response['_text'])
@@ -157,7 +147,6 @@ class Halo:
     	GPIO.cleanup()
 
 halo = Halo()
-halo.start_conversation()
 #
 # if __name__ == "__main__":
 # 	try:
