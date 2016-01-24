@@ -4,9 +4,6 @@ import httplib, urllib
 import PCF8591 as ADC
 import LCD1602 as LCD
 import RPi.GPIO as GPIO
-print "__+!_+_+_+_+"
-wit.init()
-speech_response = wit.voice_query_auto('5HO7GQT6GHYYBC4G2M5SPTCWXSNSEL4S')
 import time
 import math
 from Queue import Queue

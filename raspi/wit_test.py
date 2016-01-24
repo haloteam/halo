@@ -1,6 +1,7 @@
 import wit
 from multiprocessing import Process, Queue
 import time
+from espeak import espeak
 
 wit.init()
 wit_access_token = '5HO7GQT6GHYYBC4G2M5SPTCWXSNSEL4S'
