@@ -15,7 +15,7 @@ import random
 
 try:
     wit.init()
-    speech_response = wit.voice_query_auto(self.wit_access_token)
+    speech_response = wit.voice_query_auto('5HO7GQT6GHYYBC4G2M5SPTCWXSNSEL4S')
 except Exception as err:
     print err
 
