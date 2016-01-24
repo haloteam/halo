@@ -10,6 +10,7 @@ from threading import Thread
 import subprocess
 import json
 from datetime import datetime
+from espeak import espeak
 #import wit
 import random
 
@@ -125,8 +126,8 @@ class Halo:
         subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), self.halo_lambda_save_url])
 
     def start_conversation(self):
-        #conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
-        #espeak.synth(random.choice(conversation_starters))
+        conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
+        espeak.synth(random.choice(conversation_starters))
         # user is prompted to talk
         speech_response = wit.voice_query_auto(self.wit_access_token)
 
@@ -150,6 +151,7 @@ if __name__ == "__main__":
 	try:
 		halo = Halo()
 		halo.start()
+        halo.start_conversation()
 		#LCD.init(0x27, 1)
 		#print "LCD initialized... starting sequence"
 		#halo.displayText("Hello my name is slim shady")
