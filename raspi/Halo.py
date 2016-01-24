@@ -52,7 +52,7 @@ class Halo:
         GPIO.setup(self.H2O_PIN, GPIO.IN)
         wit.init()
 
-        
+
         # setup pins for "eyes"
         # first eye
         GPIO.setup(self.SDI_0, GPIO.OUT)
@@ -76,8 +76,6 @@ class Halo:
         save_data_worker = Thread(target=self.save_data_thread, args=())
         save_data_worker.setDaemon(True)
         save_data_worker.start()
-        conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
-        espeak.synth(random.choice(conversation_starters))
 
     # be careful, may cause conflicts in runtime
     # params is tuple of parameters
@@ -96,6 +94,7 @@ class Halo:
             self.get_gas_sensor_data()
             self.get_h2o_sensor_data()
             self.check_data()
+            self.start_conversation()
 
     def check_data(self):
         if self.inConversation == False:
