@@ -75,6 +75,9 @@ class Halo:
         save_data_worker = Thread(target=self.save_data_thread, args=())
         save_data_worker.setDaemon(True)
         save_data_worker.start()
+        blink_worker = Thread(target = self.blink)
+        blink_worker.setDaemon(True)
+        blink_worker.start()
 
     # be careful, may cause conflicts in runtime
     # params is tuple of parameters
@@ -117,6 +120,23 @@ class Halo:
     		    tmp = tmp[1:]
     		    time.sleep(0.3)
     		    LCD.clear()
+
+    def mouth_open(self):
+        LCD.clear()
+        LCD.write(0,0,'|--------------|')
+        LCD.write(0,1,'|______________|')
+
+    def mouth_close(self):
+        LCD.clear()
+        LCD.write(0,0,'________________')
+        LCD.write(0,1,'----------------')
+
+    def talk(self):
+        while True:
+            self.mouth_open()
+            time.sleep(.25)
+            self.mouth_close()
+            time.sleep(.25)
 
     def get_temperature_sensor_data(self):
         analogTemp = ADC.read(0)
@@ -201,13 +221,24 @@ class Halo:
 
     def destroy(self):
     	LCD.clear()
+        LCD.write(0,0,'')
+        LCD.write(0,1,'')
         self.set_eyes(0x00)
     	GPIO.output(self.BUZZ_PIN, GPIO.HIGH)
     	GPIO.cleanup()
 
 if __name__ == "__main__":
-    halo = Halo()
-    halo.speak("Test speak")
+    try:
+        halo = Halo()
+        halo.speak("Test speak")
+        t = Thread(target = halo.blink)
+        t.setDaemon(True)
+        t.start()
+        halo.talk()
+    except KeyboardInterrupt:
+        print "Exiting Halo..."
+    finally:
+        halo.destroy()
     #halo.start_conversation()
 	# try:
     #     halo = Halo()
