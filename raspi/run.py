@@ -39,10 +39,9 @@ def queue_task(q):
         data['deviceId'] = 1;
         data['updates'] = updates
         data['action'] = "save"
-        print data
-        resp = subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), HALO_LAMBDA_URL])
-
-        if resp.action == "talking":
+        resp = subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), HALO_LAMBDA_URL]
+	print resp
+	if resp.action == "talking":
             IS_TALKING = True
             worker = Thread(target=speech_to_text, args=())
             worker.setDaemon(True)
@@ -58,8 +57,6 @@ def alarm_task():
             GPIO.output(BUZZ, 1)
 	else:
             pass
-			
-
 def speech_to_text():
 
     # user is prompted to talk
