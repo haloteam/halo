@@ -120,13 +120,13 @@ class Halo:
 
     def mouth_open(self):
         LCD.clear()
-        LCD.write(0,0,'–––––––––––––––')
+        LCD.write(0,0,'---------------')
         LCD.write(0,1,'_______________')
 
     def mouth_close(self):
         LCD.clear()
         LCD.write(0,0,'________________')
-        LCD.write(0,1,'––––––––––––––––')
+        LCD.write(0,1,'----------------')
 
     def talk(self):
         while True:
