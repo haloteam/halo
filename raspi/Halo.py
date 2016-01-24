@@ -206,8 +206,7 @@ print '1'
 if __name__ == "__main__":
 	try:
 		halo = Halo()
-        print halo
-		halo.start_conversation()
+        halo.start_conversation()
         print 'conversation'
 		#LCD.init(0x27, 1)
 		#print "LCD initialized... starting sequence"
