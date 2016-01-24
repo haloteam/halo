@@ -13,6 +13,10 @@ from datetime import datetime
 import wit
 import random
 
+wit.init()
+speech_response = wit.voice_query_auto('5HO7GQT6GHYYBC4G2M5SPTCWXSNSEL4S')
+
+
 class Halo:
     def __init__(self):
         # pins for sensors
@@ -66,10 +70,6 @@ class Halo:
         GPIO.output(self.SDI_1, GPIO.LOW)
         GPIO.output(self.RCLK_1, GPIO.LOW)
         GPIO.output(self.SRCLK_1, GPIO.LOW)
-
-
-        wit.init()
-        speech_response = wit.voice_query_auto(self.wit_access_token)
 
     def begin_threads(self):
         save_data_worker = Thread(target=self.save_data_thread, args=())
