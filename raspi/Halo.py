@@ -45,7 +45,7 @@ class Halo:
         GPIO.setmode(GPIO.BCM)
         ADC.setup(0x48)
         LCD.init(0x27, 1)
-        self.alert("System startup")
+        self.display_text("System startup")
 
         # setup pins for sensors
         GPIO.setup(self.THERMISTOR_PIN, GPIO.IN)
@@ -109,8 +109,8 @@ class Halo:
             if self.gas > 90:
                 self.alert("GAS DETECTED!")
                 self.alarmOn = True
-            elif self.temp < 45:
-                self.alert("LOW TEMPERATURE!")
+            elif self.temp > 85:
+                self.alert("HIGH TEMP!")
                 self.alarmOn = True
             elif self.h2o < 215:
                 self.alert("WATER DETECTED!")
@@ -165,9 +165,9 @@ class Halo:
             time.sleep(.25)
 
     def get_temperature_sensor_data(self):
-        analogTemp = ADC.read(0)
-        Vr = 5 * float(analogTemp) / 255
         try:
+            analogTemp = ADC.read(0)
+            Vr = 5 * float(analogTemp) / 255
             Rt = 10000 * Vr / (5 - Vr)
             temp = 1/(((math.log(Rt / 10000)) / 3950) + (1 / (273.15 + 25)))
             self.temp = (temp - 273.15) * 9/5 + 32
@@ -190,14 +190,19 @@ class Halo:
 
     def save_data_task(self):
         updates = []
-        if self.get_temperature_sensor_data() is not None:
-            updates.append({'type' : 'temperature', 'value': str(self.get_temperature_sensor_data()), 'timestamp': str(datetime.now())})
 
-        if self.get_gas_sensor_data() is not None:
-            updates.append({'type' : 'gas', 'value': str(self.get_gas_sensor_data()), 'timestamp': str(datetime.now())})
+        self.get_temperature_sensor_data()
+        self.get_gas_sensor_data()
+        self.get_h2o_sensor_data()
+        
+        if self.temp is not None:
+            updates.append({'type' : 'temperature', 'value': str(self.temp), 'timestamp': str(datetime.now())})
 
-        if self.get_h2o_sensor_data() is not None:
-            updates.append({'type' : 'rain', 'value': str(self.get_h2o_sensor_data()), 'timestamp': str(datetime.now())})
+        if self.gas is not None:
+            updates.append({'type' : 'gas', 'value': str(self.gas), 'timestamp': str(datetime.now())})
+
+        if self.h2o is not None:
+            updates.append({'type' : 'rain', 'value': str(self.h2o), 'timestamp': str(datetime.now())})
         data = {}
         data['deviceId'] = 1;
         data['updates'] = updates
@@ -241,12 +246,17 @@ class Halo:
 
     def blink(self):
         while True:
-            print "blinking"
-            rand1 = random.randint(3,8)
-            self.set_eyes(0x3f)
-            time.sleep(rand1)
-            self.set_eyes(0x40)
-            time.sleep(0.4)
+            if self.alarmOn:
+                ray = [0x20, 0x10, 0x08, 0x04, 0x02, 0x01]
+                for x in ray:
+                    self.set_eyes(x)
+                    time.sleep(0.4)
+            else:
+                rand1 = random.randint(3,8)
+                self.set_eyes(0x3f)
+                time.sleep(rand1)
+                self.set_eyes(0x40)
+                time.sleep(0.4)
 
     def destroy(self):
     	LCD.clear()
