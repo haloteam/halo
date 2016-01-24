@@ -14,6 +14,7 @@ import wit
 from espeak import espeak
 import random
 from wit_test import start_wit, outputQueue
+from multiprocessing import Process, Queue
 
 class Halo:
     def __init__(self):
