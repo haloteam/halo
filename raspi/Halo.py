@@ -23,8 +23,8 @@ class Halo:
         self.H2O_PIN = 13
 
         # pins for eyes
-        self.SDI_0 = 16
-        self.RCLK_0 = 20
+        self.SDI_0 = 20
+        self.RCLK_0 = 16
         self.SRCLK_0 = 21
 
         self.wit_access_token = '5HO7GQT6GHYYBC4G2M5SPTCWXSNSEL4S'
