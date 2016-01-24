@@ -39,7 +39,7 @@ def queue_task(q):
         data['deviceId'] = 1;
         data['updates'] = updates
         data['action'] = "save"
-        resp = subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), HALO_LAMBDA_URL]
+        resp = subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), HALO_LAMBDA_URL])
 	print resp
 	if resp.action == "talking":
             IS_TALKING = True
