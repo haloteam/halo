@@ -102,6 +102,9 @@ class Halo:
     def alert(self, text):
         self.displayText(text)
 
+    def speak(self, text):
+        subprocess.call(["espeak", text])
+
     def displayText(self, text):
     	if len(text) < 16:
     	    LCD.write(0,0,text)
@@ -204,7 +207,7 @@ class Halo:
 
 if __name__ == "__main__":
     halo = Halo()
-    espeak.synth("hello charles")
+    halo.speak("Test speak")
     #halo.start_conversation()
 	# try:
     #     halo = Halo()
