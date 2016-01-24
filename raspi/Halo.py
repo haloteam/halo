@@ -10,10 +10,9 @@ from threading import Thread
 import subprocess
 import json
 from datetime import datetime
-import wit
+#import wit
 from espeak import espeak
 import random
-from wit_test import start_wit, outputQueue
 
 class Halo:
     def __init__(self):
@@ -42,7 +41,7 @@ class Halo:
         GPIO.setup(self.GAS_SENSOR_PIN, GPIO.IN)
         GPIO.setup(self.BUZZ_PIN, GPIO.OUT)
         GPIO.setup(self.H2O_PIN, GPIO.IN)
-        wit.init()
+        #wit.init()
 
     def begin_threads(self):
         save_data_worker = Thread(target=self.save_data_thread, args=())
@@ -129,7 +128,7 @@ class Halo:
         espeak.synth(random.choice(conversation_starters))
         time.sleep(20)
         # user is prompted to talk
-        speech_response = wit.voice_query_auto(self.wit_access_token)
+        #speech_response = wit.voice_query_auto(self.wit_access_token)
 
         # response
         question = urllib.quote_plus(speech_response['_text'])
