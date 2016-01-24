@@ -13,10 +13,6 @@ from datetime import datetime
 import wit
 import random
 
-wit.init()
-speech_response = wit.voice_query_auto('5HO7GQT6GHYYBC4G2M5SPTCWXSNSEL4S')
-
-
 class Halo:
     def __init__(self):
         # pins for sensors
@@ -54,7 +50,12 @@ class Halo:
         GPIO.setup(self.GAS_SENSOR_PIN, GPIO.IN)
         GPIO.setup(self.BUZZ_PIN, GPIO.OUT)
         GPIO.setup(self.H2O_PIN, GPIO.IN)
-
+        try:
+            wit.init()
+            speech_response = wit.voice_query_auto(self.wit_access_token)
+        except Exception as err:
+            print err
+        
         # setup pins for "eyes"
         # first eye
         GPIO.setup(self.SDI_0, GPIO.OUT)
@@ -70,6 +71,9 @@ class Halo:
         GPIO.output(self.SDI_1, GPIO.LOW)
         GPIO.output(self.RCLK_1, GPIO.LOW)
         GPIO.output(self.SRCLK_1, GPIO.LOW)
+
+        #wit.init()
+
 
     def begin_threads(self):
         save_data_worker = Thread(target=self.save_data_thread, args=())
