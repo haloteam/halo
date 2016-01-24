@@ -51,13 +51,13 @@ def queue_task(q):
         q.task_done()
 
 def alarm_task():
-	while True:
-		if ALARM:
-			GPIO.output(0)
-			time.sleep(2)
-			GPIO.output(1)
-		else:
-			pass
+    while True:
+        if ALARM:
+            GPIO.output(BUZZ, 0)
+            time.sleep(2)
+            GPIO.output(BUZZ, 1)
+	else:
+            pass
 			
 
 def speech_to_text():
@@ -86,6 +86,7 @@ def setup():
     LCD.init(0x27, 1)
     LCD.write(0,0,'System startup...')
     time.sleep(1)
+    ALARM = False
     LCD.clear()
     GPIO.setup(THERMISTOR, GPIO.IN)
     GPIO.setup(GAS_SENSOR, GPIO.IN)
@@ -96,51 +97,52 @@ def setup():
 def update_LCD(temp, gas, h2o):
     if not IS_TALKING:
         if gas >= 150:
-    		if not ALARM:
-    			ALARM = True
-                LCD.clear()
-                LCD.write(0,0,"ALERT!")
-                LCD.write(0,1,"Gas detected!")
-                print ''
-                print '   ***************'
-                print '   * Danger Gas! *'
-                print '   ***************'
-                print ''
+            if not ALARM:
+                ALARM = True
+            LCD.clear()
+            LCD.write(0,0,"ALERT!")
+            LCD.write(0,1,"Gas detected!")
+            print ''
+            print '   ***************'
+            print '   * Danger Gas! *'
+            print '   ***************'
+            print ''
 
         elif temp <= 45:
-    		if not ALARM:
-    			ALARM = True
-                status = 0
-                LCD.clear()
-                LCD.write(0,0,"ALERT!")
-                LCD.write(0,1,"Low temperature!")
-                print ''
-                print '   ********************'
-                print '   * Danger Low Temp! *'
-                print '   ********************'
-                print ''
+            if not ALARM:
+                ALARM = True
+            status = 0
+            LCD.clear()
+            LCD.write(0,0,"ALERT!")
+            LCD.write(0,1,"Low temperature!")
+            print ''
+            print '   ********************'
+            print '   * Danger Low Temp! *'
+            print '   ********************'
+            print ''
 
         elif h2o <= 200:
-    		if not ALARM:
-    			ALARM = True
-                LCD.clear()
-                LCD.write(0,0,"ALERT!")
-                LCD.write(0,1,"Water detected!")
-                print ''
-                print '   **************************'
-                print '   * Danger Water Detected! *'
-                print '   **************************'
-                print ''
-        else:
-    		if ALARM:
-    			ALARM = False
-                LCD.clear()
-                LCD.write(0,0, "System Normal")
-                print ''
-                print '   --------------------------'
-                print '   *  System Status Normal  *'
-                print '   --------------------------'
-                print ''
+            if not ALARM:
+                ALARM = True
+            LCD.clear()
+            LCD.write(0,0,"ALERT!")
+            LCD.write(0,1,"Water detected!")
+            print ''
+            print '   **************************'
+            print '   * Danger Water Detected! *'
+            print '   **************************'
+            print ''
+        
+        else:	
+            #if ALARM:
+            #    ALARM = False
+            LCD.clear()
+            LCD.write(0,0, "System Normal")
+            print ''
+            print '   --------------------------'
+            print '   *  System Status Normal  *'
+            print '   --------------------------'
+            print ''
     else:
         pass
 
@@ -149,8 +151,8 @@ def loop():
     worker.setDaemon(True)
     worker.start()
     alarm_thread = Thread(target=alarm_task)
-	alarm_thread.setDeamon(True)
-	alarm_thread.start()
+    alarm_thread.setDaemon(True)
+    alarm_thread.start()
     status = 1
     count = 0
     q_count = 0
