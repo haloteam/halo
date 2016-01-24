@@ -241,7 +241,7 @@ class Halo:
 
     def blink(self):
         while True:
-            if alarmOn:
+            if self.alarmOn:
                 ray = [0x20, 0x10, 0x08, 0x04, 0x02, 0x01]
                 for x in ray:
                     self.set_eyes(x)
