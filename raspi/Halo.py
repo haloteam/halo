@@ -24,6 +24,7 @@ class Halo:
         self.halo_lambda_save_url = 'https://a9a0t0l599.execute-api.us-east-1.amazonaws.com/prod/Halo'
         self.save_data_queue = Queue(maxsize=0)
 
+        self.wit = wit
         self.temperature = None
         self.gas = None
         self.h2o = None
@@ -42,7 +43,7 @@ class Halo:
         GPIO.setup(self.GAS_SENSOR_PIN, GPIO.IN)
         GPIO.setup(self.BUZZ_PIN, GPIO.OUT)
         GPIO.setup(self.H2O_PIN, GPIO.IN)
-        wit.init()
+        self.wit.init()
 
     def begin_threads(self):
         save_data_worker = Thread(target=self.save_data_thread, args=())
@@ -128,7 +129,7 @@ class Halo:
         conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
         espeak.synth(random.choice(conversation_starters))
         # user is prompted to talk
-        speech_response = wit.voice_query_auto(self.wit_access_token)
+        speech_response = self.wit.voice_query_auto(self.wit_access_token)
 
         # response
         question = urllib.quote_plus(speech_response['_text'])
