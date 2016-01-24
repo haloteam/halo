@@ -26,6 +26,9 @@ class Halo:
         self.SDI_0 = 20
         self.RCLK_0 = 16
         self.SRCLK_0 = 21
+        self.SDI_1 = 5
+        self.RCLK_1 = 19
+        self.SRCLK_1 = 26
 
         self.wit_access_token = '5HO7GQT6GHYYBC4G2M5SPTCWXSNSEL4S'
         self.halo_lambda_save_url = 'https://a9a0t0l599.execute-api.us-east-1.amazonaws.com/prod/Halo'
@@ -51,12 +54,20 @@ class Halo:
 
         
         # setup pins for "eyes"
+        # first eye
         GPIO.setup(self.SDI_0, GPIO.OUT)
         GPIO.setup(self.RCLK_0, GPIO.OUT)
         GPIO.setup(self.SRCLK_0, GPIO.OUT)
         GPIO.output(self.SDI_0, GPIO.LOW)
         GPIO.output(self.RCLK_0, GPIO.LOW)
         GPIO.output(self.SRCLK_0, GPIO.LOW)
+        # second eye
+        GPIO.setup(self.SDI_1, GPIO.OUT)
+        GPIO.setup(self.RCLK_1, GPIO.OUT)
+        GPIO.setup(self.SRCLK_1, GPIO.OUT)
+        GPIO.output(self.SDI_1, GPIO.LOW)
+        GPIO.output(self.RCLK_1, GPIO.LOW)
+        GPIO.output(self.SRCLK_1, GPIO.LOW)
 
         #wit.init()
 
@@ -168,27 +179,26 @@ class Halo:
     def set_eyes(self, dat):
         for bit in range(0,8):
             GPIO.output(self.SDI_0, 0x80 & (dat << bit))
-            # GPIO.output(self.SDI_1, 0x80 & (dat << bit))
+            GPIO.output(self.SDI_1, 0x80 & (dat << bit))
             GPIO.output(self.SRCLK_0, GPIO.HIGH)
-            # GPIO.output(self.SRCLK_1, GPIO.HIGH)
+            GPIO.output(self.SRCLK_1, GPIO.HIGH)
             time.sleep(0.001)
             GPIO.output(self.SRCLK_0, GPIO.LOW)
-            # GPIO.output(self.SRCLK_1, GPIO.LOW)
+            GPIO.output(self.SRCLK_1, GPIO.LOW)
         GPIO.output(self.RCLK_0, GPIO.HIGH)
-        # GPIO.output(self.RCLK_1, GPIO.HIGH)
+        GPIO.output(self.RCLK_1, GPIO.HIGH)
         time.sleep(0.001)
         GPIO.output(self.RCLK_0, GPIO.LOW)
-        # GPIO.output(self.RCLK_1, GPIO.LOW)
+        GPIO.output(self.RCLK_1, GPIO.LOW)
 
     def blink(self):
         while True:
             print "blinking"
-            rand1 = random.randint(3,6)
-            rand2 = random.randint(1,3)
+            rand1 = random.randint(3,8)
             self.set_eyes(0x3f)
             time.sleep(rand1)
             self.set_eyes(0x40)
-            time.sleep(rand2)
+            time.sleep(1)
 
     def destroy(self):
     	LCD.clear()
