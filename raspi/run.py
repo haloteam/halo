@@ -44,7 +44,7 @@ def setup():
     GPIO.setup(GAS_SENSOR_PIN, GPIO.IN)
     GPIO.setup(BUZZ_PIN, GPIO.OUT)
     GPIO.setup(H2O_PIN, GPIO.OUT)
-    GPIO.output(BUZZ_PIN, 1)
+    GPIO.output(BUZZ_PIN, GPIO.HIGH)
     wit.init()
 
 def queue_task(q):
@@ -106,9 +106,10 @@ def setup():
     GPIO.output(BUZZ_PIN, GPIO.HIGH)
 
 def update_LCD(temp, gas, h2o):
+    global ALARM_ON
     if not IS_TALKING:
         if gas >= 150:
-            if not ALARM_ON:
+            if not ALARM_ON == True:
                 ALARM_ON = True
             LCD.clear()
             LCD.write(0,0,"ALERT!")
@@ -120,7 +121,7 @@ def update_LCD(temp, gas, h2o):
             print ''
 
         elif temp <= 45:
-            if not ALARM_ON:
+            if not ALARM_ON == True:
                 ALARM_ON = True
             status = 0
             LCD.clear()
@@ -133,7 +134,7 @@ def update_LCD(temp, gas, h2o):
             print ''
 
         elif h2o <= 200:
-            if not ALARM_ON:
+            if not ALARM_ON == True:
                 ALARM_ON = True
             LCD.clear()
             LCD.write(0,0,"ALERT!")
@@ -145,6 +146,7 @@ def update_LCD(temp, gas, h2o):
             print ''
         
         else:	
+	    print ALARM_ON.__repr__()
             if ALARM_ON:
                 ALARM_ON = False
             LCD.clear()
@@ -212,7 +214,10 @@ def loop():
 
 def destroy():
 	LCD.clear()
-	GPIO.output(BUZZ, GPIO.HIGH)
+	GPIO.output(BUZZ_PIN, GPIO.HIGH)
+	GPIO.output(H2O_PIN, GPIO.HIGH)
+	GPIO.output(THERMISTOR_PIN, GPIO.HIGH)
+	GPIO.output(GAS_SENSOR_PIN, GPIO.HIGH)
 	GPIO.cleanup()
 
 if __name__ == '__main__':
