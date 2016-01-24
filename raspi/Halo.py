@@ -38,6 +38,7 @@ class Halo:
 
         self.inConversation = False
         self.setup()
+        speech_response = wit.voice_query_auto(self.wit_access_token)
 
     def setup(self):
         GPIO.setmode(GPIO.BCM)
@@ -94,7 +95,6 @@ class Halo:
             self.get_gas_sensor_data()
             self.get_h2o_sensor_data()
             self.check_data()
-            self.start_conversation()
 
     def check_data(self):
         if self.inConversation == False:
