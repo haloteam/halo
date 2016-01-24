@@ -38,6 +38,7 @@ class Halo:
         self.h2o = None
 
         self.inConversation = False
+        self.alarmOn = False
         self.setup()
 
     def setup(self):
@@ -78,6 +79,9 @@ class Halo:
         blink_worker = Thread(target = self.blink)
         blink_worker.setDaemon(True)
         blink_worker.start()
+        alarm_worker = Thread(target = self.alarm)
+        alarm_worker.setDaemon(True)
+        alarm_worker.start()
 
     # be careful, may cause conflicts in runtime
     # params is tuple of parameters
@@ -104,13 +108,27 @@ class Halo:
         if self.inConversation == False:
             if self.gas > 90:
                 self.alert("GAS DETECTED!")
+                self.alarmOn = True
             elif self.temp < 45:
                 self.alert("LOW TEMPERATURE!")
+                self.alarmOn = True
             elif self.h2o < 215:
                 self.alert("WATER DETECTED!")
+                self.alarmOn = True
             else:
                 self.display_text("SYSTEM NORMAL")
+                self.alarmOn = False
             
+    def alarm(self):
+        while True:
+            if self.alarmOn:
+                GPIO.output(self.BUZZ_PIN, GPIO.LOW)
+                time.sleep(.5)
+                GPIO.output(self.BUZZ_PIN, GPIO.HIGH)
+                time.sleep(.5)
+            else:
+                GPIO.output(self.BUZZ_PIN, GPIO.HIGH)
+
     def alert(self, text):
         LCD.clear()
         LCD.write(0,0,"ALERT!")
