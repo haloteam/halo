@@ -10,8 +10,7 @@ from threading import Thread
 import subprocess
 import json
 from datetime import datetime
-from espeak import espeak
-#import wit
+import wit
 import random
 
 class Halo:
@@ -39,6 +38,7 @@ class Halo:
         GPIO.setup(self.GAS_SENSOR_PIN, GPIO.IN)
         GPIO.setup(self.BUZZ_PIN, GPIO.OUT)
         GPIO.setup(self.H2O_PIN, GPIO.IN)
+        wit.init()
 
     def begin_threads(self):
         save_data_worker = Thread(target=self.save_data_thread, args=())
@@ -73,22 +73,18 @@ class Halo:
     def alert(self, text):
         self.displayText(text)
 
-    def speak(self, text):
-        pass
-        #espeak.synth(text)
-
     def displayText(self, text):
-	if len(text) < 16:
-	    LCD.write(0,0,text)
-	else:
-	    while True:
-		space = '      '
-		tmp = space + text
-		for i in range(0, len(text)):
-		    LCD.write(0,0,tmp)
-		    tmp = tmp[1:]
-		    time.sleep(0.3)
-		    LCD.clear()
+    	if len(text) < 16:
+    	    LCD.write(0,0,text)
+    	else:
+    	    while True:
+    		space = '      '
+    		tmp = space + text
+    		for i in range(0, len(text)):
+    		    LCD.write(0,0,tmp)
+    		    tmp = tmp[1:]
+    		    time.sleep(0.3)
+    		    LCD.clear()
 
     def get_temperature_sensor_data(self):
         analogTemp = ADC.read(0)
@@ -128,10 +124,11 @@ class Halo:
         subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), self.halo_lambda_save_url])
 
     def start_conversation(self):
-        conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
-        espeak.synth(random.choice(conversation_starters))
-        # user is prompted to talk
         speech_response = wit.voice_query_auto(self.wit_access_token)
+        #conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
+        #espeak.synth(random.choice(conversation_starters))
+        # user is prompted to talk
+
 
         # response
         question = urllib.quote_plus(speech_response['_text'])
