@@ -42,7 +42,7 @@ class Halo:
         GPIO.setup(self.GAS_SENSOR_PIN, GPIO.IN)
         GPIO.setup(self.BUZZ_PIN, GPIO.OUT)
         GPIO.setup(self.H2O_PIN, GPIO.IN)
-        self.wit.init()
+        wit.init()
 
     def begin_threads(self):
         save_data_worker = Thread(target=self.save_data_thread, args=())
