@@ -28,6 +28,7 @@ class Halo:
         self.gas = None
         self.h20 = None
 
+
         self.setup()
 
     def setup(self):
@@ -53,6 +54,22 @@ class Halo:
             self.get_temperature_sensor_data()
             self.get_gas_sensor_data()
             self.get_h2o_sensor_data()
+            self.check_data()
+
+    def check_data(self):
+        if self.inConversation == False:
+            if self.gas > 90:
+                self.alert("GAS OVERLOAD")
+
+
+    def alert(self, text):
+        self.displayText(text)
+
+
+    def speak(self, text):
+        pass
+    def displayText(self, text):
+        pass
 
     def get_temperature_sensor_data(self):
         analogTemp = ADC.read(0)
