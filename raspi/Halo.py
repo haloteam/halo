@@ -198,7 +198,7 @@ class Halo:
 if __name__ == "__main__":
 	try:
 		halo = Halo()
-		halo.start()
+		halo.blink()
 		#LCD.init(0x27, 1)
 		#print "LCD initialized... starting sequence"
 		#halo.displayText("Hello my name is slim shady")
