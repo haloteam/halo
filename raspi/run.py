@@ -26,7 +26,7 @@ HALO_LAMBDA_URL = "https://a9a0t0l599.execute-api.us-east-1.amazonaws.com/prod/H
 THERMISTOR_PIN = 17
 GAS_SENSOR_PIN = 18
 BUZZ_PIN = 6
-RAIN_PIN = 13
+H2O_PIN = 13
 
 
 GPIO.setmode(GPIO.BCM)
@@ -40,11 +40,11 @@ def setup():
     LCD.write(0,0,'System startup...')
     time.sleep(1)
     LCD.clear()
-    GPIO.setup(THERMISTOR, GPIO.IN)
-    GPIO.setup(GAS_SENSOR, GPIO.IN)
-    GPIO.setup(BUZZ, GPIO.OUT)
-    GPIO.setup(RAIN, GPIO.OUT)
-    GPIO.output(BUZZ, 1)
+    GPIO.setup(THERMISTOR_PIN, GPIO.IN)
+    GPIO.setup(GAS_SENSOR_PIN, GPIO.IN)
+    GPIO.setup(BUZZ_PIN, GPIO.OUT)
+    GPIO.setup(H2O_PIN, GPIO.OUT)
+    GPIO.output(BUZZ_PIN, 1)
     wit.init()
 
 def queue_task(q):
@@ -66,24 +66,14 @@ def queue_task(q):
         q.task_done()
 
 def alarm_task():
-<<<<<<< HEAD
-    while True:
-        if ALARM:
-            GPIO.output(BUZZ, 0)
-            time.sleep(2)
-            GPIO.output(BUZZ, 1)
-	else:
-            pass
-=======
 	while True:
-		if ALARM:
-			GPIO.output(0)
+		if ALARM_ON:
+			GPIO.output(BUZZ_PIN, GPIO.LOW)
 			time.sleep(2)
-			GPIO.output(1)
+			GPIO.output(BUZZ_PIN, GPIO.HIGH)
 		else:
 			pass
 
->>>>>>> e5685d91f1f8fd2cacd47fee52ad7550c025df6d
 def speech_to_text():
     # user is prompted to talk
     speech_response = wit.voice_query_auto(wit_access_token)
@@ -102,7 +92,6 @@ def mouth_open():
     LCD.clear()
     LCD.write(0,0,"")
 
-<<<<<<< HEAD
 def setup():
     ADC.setup(0x48)
     LCD.init(0x27, 1)
@@ -110,20 +99,17 @@ def setup():
     time.sleep(1)
     ALARM = False
     LCD.clear()
-    GPIO.setup(THERMISTOR, GPIO.IN)
-    GPIO.setup(GAS_SENSOR, GPIO.IN)
-    GPIO.setup(BUZZ, GPIO.OUT)
-    GPIO.setup(RAIN, GPIO.OUT)
-    GPIO.output(BUZZ, 1)
-=======
-
->>>>>>> e5685d91f1f8fd2cacd47fee52ad7550c025df6d
+    GPIO.setup(THERMISTOR_PIN, GPIO.IN)
+    GPIO.setup(GAS_SENSOR_PIN, GPIO.IN)
+    GPIO.setup(BUZZ_PIN, GPIO.OUT)
+    GPIO.setup(H2O_PIN, GPIO.OUT)
+    GPIO.output(BUZZ_PIN, GPIO.HIGH)
 
 def update_LCD(temp, gas, h2o):
     if not IS_TALKING:
         if gas >= 150:
-            if not ALARM:
-                ALARM = True
+            if not ALARM_ON:
+                ALARM_ON = True
             LCD.clear()
             LCD.write(0,0,"ALERT!")
             LCD.write(0,1,"Gas detected!")
@@ -134,8 +120,8 @@ def update_LCD(temp, gas, h2o):
             print ''
 
         elif temp <= 45:
-            if not ALARM:
-                ALARM = True
+            if not ALARM_ON:
+                ALARM_ON = True
             status = 0
             LCD.clear()
             LCD.write(0,0,"ALERT!")
@@ -147,8 +133,8 @@ def update_LCD(temp, gas, h2o):
             print ''
 
         elif h2o <= 200:
-            if not ALARM:
-                ALARM = True
+            if not ALARM_ON:
+                ALARM_ON = True
             LCD.clear()
             LCD.write(0,0,"ALERT!")
             LCD.write(0,1,"Water detected!")
@@ -159,8 +145,8 @@ def update_LCD(temp, gas, h2o):
             print ''
         
         else:	
-            #if ALARM:
-            #    ALARM = False
+            if ALARM_ON:
+                ALARM_ON = False
             LCD.clear()
             LCD.write(0,0, "System Normal")
             print ''
@@ -176,11 +162,7 @@ def loop():
     worker.setDaemon(True)
     worker.start()
     alarm_thread = Thread(target=alarm_task)
-<<<<<<< HEAD
     alarm_thread.setDaemon(True)
-=======
-    alarm_thread.setDeamon(True)
->>>>>>> e5685d91f1f8fd2cacd47fee52ad7550c025df6d
     alarm_thread.start()
     status = 1
     count = 0
@@ -222,7 +204,7 @@ def loop():
             updates = []
             updates.append({'type' : 'temperature', 'value': str(temp), 'timestamp': str(datetime.now())})
             updates.append({'type' : 'gas', 'value': str(ADC.read(1)), 'timestamp': str(datetime.now())})
-            updates.append({'type' : 'rain', 'value': str(h2o), 'timestamp': str(datetime.now())})
+            updates.append({'type' : 'h2o', 'value': str(h2o), 'timestamp': str(datetime.now())})
             q.put(updates)
             q_count = 0
         q_count = q_count + 1
@@ -230,7 +212,7 @@ def loop():
 
 def destroy():
 	LCD.clear()
-	GPIO.output(BUZZ, 1)
+	GPIO.output(BUZZ, GPIO.HIGH)
 	GPIO.cleanup()
 
 if __name__ == '__main__':
