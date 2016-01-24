@@ -190,6 +190,7 @@ class Halo:
 
     def save_data_task(self):
         updates = []
+
         self.get_temperature_sensor_data()
         self.get_gas_sensor_data()
         self.get_h2o_sensor_data()
@@ -201,7 +202,7 @@ class Halo:
             updates.append({'type' : 'gas', 'value': str(self.gas), 'timestamp': str(datetime.now())})
 
         if self.h2o is not None:
-            updates.append({'type' : 'rain', 'value': str(self.h20), 'timestamp': str(datetime.now())})
+            updates.append({'type' : 'rain', 'value': str(self.h2o), 'timestamp': str(datetime.now())})
         data = {}
         data['deviceId'] = 1;
         data['updates'] = updates
