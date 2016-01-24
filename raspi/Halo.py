@@ -55,7 +55,7 @@ class Halo:
             speech_response = wit.voice_query_auto(self.wit_access_token)
         except Exception as err:
             print err
-        
+
         # setup pins for "eyes"
         # first eye
         GPIO.setup(self.SDI_0, GPIO.OUT)
@@ -162,7 +162,7 @@ class Halo:
         #espeak.synth(random.choice(conversation_starters))
         # user is prompted to talk
 
-
+        return
         # response
         question = urllib.quote_plus(speech_response['_text'])
         resp = subprocess.call(['curl', 'https://www.houndify.com/textSearch?query=' + question + '&clientId=e7SgQJ_wwXjv5cUx1nLqKQ%3D%3D&clientKey=Pi_smrHYQhCA_nLgukp4C4nnQE2WyQvk3l3Bhs8hcbchrLAmjl5LWS3ewq1U8LMser8j890OfhklwNm77baPTw%3D%3D', '-H', 'Accept-Encoding: gzip, deflate, sdch', '-H', 'Accept-Language: en-US,en;q=0.8', '-H', 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36', '-H', 'Accept: */*', '-H', 'Referer: https://www.houndify.com/try/986dcfd1-0b91-4346-a5a0-6d53f0d18da2', '-H',
@@ -207,7 +207,7 @@ class Halo:
 if __name__ == "__main__":
 	try:
 		halo = Halo()
-		halo.blink()
+		halo.start_conversation()
 		#LCD.init(0x27, 1)
 		#print "LCD initialized... starting sequence"
 		#halo.displayText("Hello my name is slim shady")
