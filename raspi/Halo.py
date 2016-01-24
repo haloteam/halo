@@ -45,7 +45,7 @@ class Halo:
         GPIO.setmode(GPIO.BCM)
         ADC.setup(0x48)
         LCD.init(0x27, 1)
-        self.alert("System startup")
+        self.display_text("System startup...")
 
         # setup pins for sensors
         GPIO.setup(self.THERMISTOR_PIN, GPIO.IN)
