@@ -183,8 +183,8 @@ class Halo:
     def blink(self):
         while True:
             print "blinking"
-            rand1 = random.randrange(3,6,0.2)
-            rand2 = random.randrange(1,3,0.2)
+            rand1 = random.randint(3,6)
+            rand2 = random.randint(1,3)
             set_eyes(0x3f)
             time.sleep(rand1)
             set_eyes(0x40)
