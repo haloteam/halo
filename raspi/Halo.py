@@ -79,6 +79,9 @@ class Halo:
         save_data_worker = Thread(target=self.save_data_thread, args=())
         save_data_worker.setDaemon(True)
         save_data_worker.start()
+        blink_worker = Thread(target = self.blink)
+        blink_worker.setDaemon(True)
+        blink_worker.start()
 
     # be careful, may cause conflicts in runtime
     # params is tuple of parameters
@@ -118,6 +121,23 @@ class Halo:
     		    tmp = tmp[1:]
     		    time.sleep(0.3)
     		    LCD.clear()
+
+    def mouth_open(self):
+        LCD.clear()
+        LCD.write(0,0,'|--------------|')
+        LCD.write(0,1,'|______________|')
+
+    def mouth_close(self):
+        LCD.clear()
+        LCD.write(0,0,'|______________|')
+        LCD.write(0,1,'|––––––––––––––|')
+
+    def talk(self):
+        while True:
+            self.mouth_open()
+            time.sleep(.25)
+            self.mouth_close()
+            time.sleep(.25)
 
     def get_temperature_sensor_data(self):
         analogTemp = ADC.read(0)
