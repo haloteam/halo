@@ -31,6 +31,7 @@ class Halo:
         self.inConversation = False
 
         self.setup()
+        self.start_conversation()
 
     def setup(self):
         GPIO.setmode(GPIO.BCM)
@@ -148,10 +149,11 @@ class Halo:
 if __name__ == "__main__":
 	try:
 		halo = Halo()
+        halo.start_conversation()
 #		halo.start()
-		LCD.init(0x27, 1)
-		print "LCD initialized... starting sequence"
-		halo.displayText("Hello my name is slim shady")
+		#LCD.init(0x27, 1)
+		#print "LCD initialized... starting sequence"
+		#halo.displayText("Hello my name is slim shady")
 	except KeyboardInterrupt:
 		print "Exiting Halo..."
 		halo.destroy()
