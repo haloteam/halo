@@ -44,6 +44,8 @@ class Halo:
         save_data_worker = Thread(target=self.save_data_thread, args=())
         save_data_worker.setDaemon(True)
         save_data_worker.start()
+        conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
+        espeak.synth(random.choice(conversation_starters))
 
     # be careful, may cause conflicts in runtime
     # params is tuple of parameters
