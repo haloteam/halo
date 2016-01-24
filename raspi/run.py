@@ -39,8 +39,8 @@ def queue_task(q):
         data['deviceId'] = 1;
         data['updates'] = updates
         data['action'] = "save"
-        resp = subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), HALO_LAMBDA_URL]
-        print resp
+        resp = subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), HALO_LAMBDA_URL])
+        print resp, 'resp'
         if resp.action == "talking":
             IS_TALKING = True
             worker = Thread(target=speech_to_text, args=())
