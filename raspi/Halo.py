@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import wit
+print "++++++++++"
 wit.init()
 speech_response = wit.voice_query_auto('5HO7GQT6GHYYBC4G2M5SPTCWXSNSEL4S')
 print "_____________"
