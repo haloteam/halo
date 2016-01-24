@@ -40,9 +40,10 @@ class Halo:
         wit.init()
 
     def begin_threads(self):
-        save_data_worker = Thread(target=save_data_task, args=())
-        worker.setDaemon(True)
-        worker.start()
+        save_data_worker = Thread(target=save_data_thread, args=())
+        save_data_worker.setDaemon(True)
+        save_data_worker.start()
+        
 
     def start(self):
         while True:
@@ -66,16 +67,18 @@ class Halo:
         self.h2o = ADC.read(2)
         return self.h20
 
-    # posts to server every few seconds
-    def save_data_task(self):
+    def save_data_thread(self):
         while True:
-            time.sleep(3)
-            updates = []
-            updates.append({'type' : 'temperature', 'value': str(temp), 'timestamp': str(datetime.now())})
-            updates.append({'type' : 'gas', 'value': str(ADC.read(1)), 'timestamp': str(datetime.now())})
-            updates.append({'type' : 'rain', 'value': str(h2o), 'timestamp': str(datetime.now())})
-            data = {}
-            data['deviceId'] = 1;
-            data['updates'] = updates
-            data['action'] = "save"
-            subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), self.halo_lambda_save_url])
+            time.sleep(4)
+            self.save_data_task()
+
+    def save_data_task(self):
+        updates = []
+        updates.append({'type' : 'temperature', 'value': str(temp), 'timestamp': str(datetime.now())})
+        updates.append({'type' : 'gas', 'value': str(ADC.read(1)), 'timestamp': str(datetime.now())})
+        updates.append({'type' : 'rain', 'value': str(h2o), 'timestamp': str(datetime.now())})
+        data = {}
+        data['deviceId'] = 1;
+        data['updates'] = updates
+        data['action'] = "save"
+        subprocess.call(['curl', '-X', 'POST', '-d', json.dumps(data), self.halo_lambda_save_url])
