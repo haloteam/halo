@@ -42,9 +42,9 @@ def setup():
     LCD.clear()
     GPIO.setup(THERMISTOR, GPIO.IN)
     GPIO.setup(GAS_SENSOR, GPIO.IN)
-    GPIO.setup(BUZZ, GPIO.OUT)
+    GPIO.setup(BUZZ_PIN, GPIO.OUT)
     GPIO.setup(RAIN, GPIO.OUT)
-    GPIO.output(BUZZ, 1)
+    GPIO.output(BUZZ_PIN, 1)
     wit.init()
 
 def queue_task(q):
@@ -67,9 +67,9 @@ def queue_task(q):
 def alarm_task():
 	while True:
 		if ALARM:
-			GPIO.output(0)
+			GPIO.output(BUZZ_PIN, GPIO.LOW)
 			time.sleep(2)
-			GPIO.output(1)
+			GPIO.output(BUZZ_PIN, GPIO.HIGH)
 		else:
 			pass
 
@@ -199,7 +199,7 @@ def loop():
 
 def destroy():
 	LCD.clear()
-	GPIO.output(BUZZ, 1)
+	GPIO.output(BUZZ_PIN, 1)
 	GPIO.cleanup()
 
 if __name__ == '__main__':
