@@ -127,6 +127,7 @@ class Halo:
     def start_conversation(self):
         conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
         espeak.synth(random.choice(conversation_starters))
+        time.sleep(20)
         # user is prompted to talk
         speech_response = wit.voice_query_auto(self.wit_access_token)
 
