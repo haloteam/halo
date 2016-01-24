@@ -15,10 +15,20 @@ import random
 
 class Halo:
     def __init__(self):
+        # pins for sensors
         self.THERMISTOR_PIN = 17
         self.GAS_SENSOR_PIN = 18
         self.BUZZ_PIN = 6
         self.H2O_PIN = 13
+
+        # pins for eyes
+        self.SDI_0 = 20
+        self.RCLK_0 = 16
+        self.SRCLK_0 = 21
+        self.SDI_1 = 5
+        self.RCLK_1 = 19
+        self.SRCLK_1 = 26
+
         self.wit_access_token = '5HO7GQT6GHYYBC4G2M5SPTCWXSNSEL4S'
         self.halo_lambda_save_url = 'https://a9a0t0l599.execute-api.us-east-1.amazonaws.com/prod/Halo'
         self.save_data_queue = Queue(maxsize=0)
@@ -34,11 +44,33 @@ class Halo:
         ADC.setup(0x48)
         LCD.init(0x27, 1)
         self.alert("System startup")
+
+        # setup pins for sensors
         GPIO.setup(self.THERMISTOR_PIN, GPIO.IN)
         GPIO.setup(self.GAS_SENSOR_PIN, GPIO.IN)
         GPIO.setup(self.BUZZ_PIN, GPIO.OUT)
         GPIO.setup(self.H2O_PIN, GPIO.IN)
         wit.init()
+
+        
+        # setup pins for "eyes"
+        # first eye
+        GPIO.setup(self.SDI_0, GPIO.OUT)
+        GPIO.setup(self.RCLK_0, GPIO.OUT)
+        GPIO.setup(self.SRCLK_0, GPIO.OUT)
+        GPIO.output(self.SDI_0, GPIO.LOW)
+        GPIO.output(self.RCLK_0, GPIO.LOW)
+        GPIO.output(self.SRCLK_0, GPIO.LOW)
+        # second eye
+        GPIO.setup(self.SDI_1, GPIO.OUT)
+        GPIO.setup(self.RCLK_1, GPIO.OUT)
+        GPIO.setup(self.SRCLK_1, GPIO.OUT)
+        GPIO.output(self.SDI_1, GPIO.LOW)
+        GPIO.output(self.RCLK_1, GPIO.LOW)
+        GPIO.output(self.SRCLK_1, GPIO.LOW)
+
+        #wit.init()
+
 
     def begin_threads(self):
         save_data_worker = Thread(target=self.save_data_thread, args=())
@@ -141,6 +173,30 @@ class Halo:
         #espeak.synth(talk_answer)
         IS_TALKING = False
 
+    def set_eyes(self, dat):
+        for bit in range(0,8):
+            GPIO.output(self.SDI_0, 0x80 & (dat << bit))
+            GPIO.output(self.SDI_1, 0x80 & (dat << bit))
+            GPIO.output(self.SRCLK_0, GPIO.HIGH)
+            GPIO.output(self.SRCLK_1, GPIO.HIGH)
+            time.sleep(0.001)
+            GPIO.output(self.SRCLK_0, GPIO.LOW)
+            GPIO.output(self.SRCLK_1, GPIO.LOW)
+        GPIO.output(self.RCLK_0, GPIO.HIGH)
+        GPIO.output(self.RCLK_1, GPIO.HIGH)
+        time.sleep(0.001)
+        GPIO.output(self.RCLK_0, GPIO.LOW)
+        GPIO.output(self.RCLK_1, GPIO.LOW)
+
+    def blink(self):
+        while True:
+            print "blinking"
+            rand1 = random.randint(3,8)
+            self.set_eyes(0x3f)
+            time.sleep(rand1)
+            self.set_eyes(0x40)
+            time.sleep(1)
+
     def destroy(self):
     	LCD.clear()
     	GPIO.output(self.BUZZ_PIN, GPIO.HIGH)
@@ -149,12 +205,11 @@ class Halo:
 if __name__ == "__main__":
 	try:
 		halo = Halo()
-		halo.start()
+		halo.blink()
 		#LCD.init(0x27, 1)
 		#print "LCD initialized... starting sequence"
 		#halo.displayText("Hello my name is slim shady")
 	except KeyboardInterrupt:
 		print "Exiting Halo..."
+	finally:
 		halo.destroy()
-#	finally:
-#		halo.destroy()
