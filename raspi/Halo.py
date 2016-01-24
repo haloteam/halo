@@ -241,12 +241,17 @@ class Halo:
 
     def blink(self):
         while True:
-            print "blinking"
-            rand1 = random.randint(3,8)
-            self.set_eyes(0x3f)
-            time.sleep(rand1)
-            self.set_eyes(0x40)
-            time.sleep(0.4)
+            if alarmOn:
+                ray = [0x20, 0x10, 0x08, 0x04, 0x02, 0x01]
+                for x in ray:
+                    self.set_eyes(x)
+                    time.sleep(0.4)
+            else:
+                rand1 = random.randint(3,8)
+                self.set_eyes(0x3f)
+                time.sleep(rand1)
+                self.set_eyes(0x40)
+                time.sleep(0.4)
 
     def destroy(self):
     	LCD.clear()
