@@ -13,6 +13,7 @@ from datetime import datetime
 import wit
 from espeak import espeak
 import random
+from wit_test import start_wit, outputQueue
 
 class Halo:
     def __init__(self):
@@ -23,6 +24,8 @@ class Halo:
         self.wit_access_token = '5HO7GQT6GHYYBC4G2M5SPTCWXSNSEL4S'
         self.halo_lambda_save_url = 'https://a9a0t0l599.execute-api.us-east-1.amazonaws.com/prod/Halo'
         self.save_data_queue = Queue(maxsize=0)
+
+        self.wit_process = Process(target=start_wit, args=())
 
         self.temperature = None
         self.gas = None
@@ -37,7 +40,7 @@ class Halo:
         GPIO.setmode(GPIO.BCM)
         ADC.setup(0x48)
         LCD.init(0x27, 1)
-	self.alert("System startup")
+        self.alert("System startup")
         GPIO.setup(self.THERMISTOR_PIN, GPIO.IN)
         GPIO.setup(self.GAS_SENSOR_PIN, GPIO.IN)
         GPIO.setup(self.BUZZ_PIN, GPIO.OUT)
@@ -125,7 +128,7 @@ class Halo:
 
 
     def start_conversation(self):
-        conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
+        #conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
         #espeak.synth(random.choice(conversation_starters))
         # user is prompted to talk
         speech_response = wit.voice_query_auto(self.wit_access_token)
