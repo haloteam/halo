@@ -11,7 +11,6 @@ import subprocess
 import json
 from datetime import datetime
 #import wit
-from espeak import espeak
 import random
 
 class Halo:
@@ -30,7 +29,6 @@ class Halo:
         self.inConversation = False
 
         self.setup()
-        self.start_conversation()
 
     def setup(self):
         GPIO.setmode(GPIO.BCM)
@@ -75,7 +73,8 @@ class Halo:
         self.displayText(text)
 
     def speak(self, text):
-        espeak.synth(text)
+        pass
+        #espeak.synth(text)
 
     def displayText(self, text):
 	if len(text) < 16:
@@ -124,11 +123,10 @@ class Halo:
 
 
     def start_conversation(self):
-        conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
-        espeak.synth(random.choice(conversation_starters))
-        time.sleep(20)
+        #conversation_starters = ["Hello", "How are you?", "Hi There", "I don't know you, but I like you.", "You are dashing in that Suit."]
+        #espeak.synth(random.choice(conversation_starters))
         # user is prompted to talk
-        #speech_response = wit.voice_query_auto(self.wit_access_token)
+        speech_response = wit.voice_query_auto(self.wit_access_token)
 
         # response
         question = urllib.quote_plus(speech_response['_text'])
@@ -138,7 +136,7 @@ class Halo:
         talk_answer = answer["AllResults"][0]['SpokenResponseLong'];
         # do something with answer
         # speak the answer
-        espeak.synth(talk_answer)
+        #espeak.synth(talk_answer)
         IS_TALKING = False
 
     def destroy(self):
@@ -147,17 +145,16 @@ class Halo:
     	GPIO.cleanup()
 
 halo = Halo()
-#
-# if __name__ == "__main__":
-# 	try:
-# 		halo = Halo()
-#         #halo.start_conversation()
-# #		halo.start()
-# 		#LCD.init(0x27, 1)
-# 		#print "LCD initialized... starting sequence"
-# 		#halo.displayText("Hello my name is slim shady")
-# 	except KeyboardInterrupt:
-# 		print "Exiting Halo..."
-# 		halo.destroy()
-# #	finally:
-# #		halo.destroy()
+
+if __name__ == "__main__":
+	try:
+		halo = Halo()
+		halo.start()
+		#LCD.init(0x27, 1)
+		#print "LCD initialized... starting sequence"
+		#halo.displayText("Hello my name is slim shady")
+	except KeyboardInterrupt:
+		print "Exiting Halo..."
+		halo.destroy()
+#	finally:
+#		halo.destroy()
