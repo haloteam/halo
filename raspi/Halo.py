@@ -208,6 +208,8 @@ if __name__ == "__main__":
 		#halo.displayText("Hello my name is slim shady")
 	except KeyboardInterrupt:
 		print "Exiting Halo..."
-	finally Exception as err:
+    except Exception as err:
+        print err
+	finally
         print err
 		halo.destroy()
