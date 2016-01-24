@@ -225,6 +225,9 @@ class Halo:
 if __name__ == "__main__":
     try:
         halo = Halo()
+        t = Thread(target = halo.blink)
+        t.setDaemon(True)
+        t.start()
         halo.talk()
     except KeyboardInterrupt:
         print "Exiting Halo..."
